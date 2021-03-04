@@ -7,7 +7,7 @@ PREFABS.Decor_garrett_hell_crystal_analyser_thing_EPIC =
   theme  = "tech"
   env    = "building"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   where  = "point"
 
@@ -28,6 +28,8 @@ PREFABS.Decor_gtd_hell_crystal_analyser_thing_2_EPIC =
   height = 128
   size = 104
 
+  face_open = true
+
   bound_z2 = 128
 
   z_fit = "top"
@@ -38,8 +40,12 @@ PREFABS.Decor_gtd_hell_crystal_analyser_thing_3_EPIC =
   template = "Decor_garrett_hell_crystal_analyser_thing_EPIC"
   map = "MAP03"
 
+  prob = 8000
+
   height = 128
   size = 112
+
+  face_open = true
 
   bound_z2 = 128
 

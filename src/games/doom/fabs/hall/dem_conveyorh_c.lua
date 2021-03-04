@@ -19,7 +19,7 @@ PREFABS.Hallway_conveyorh_c1 =
   seed_w = 2
   seed_h = 2
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -59,4 +59,5 @@ PREFABS.Hallway_conveyorh_c6 =
   style  = "traps"
   prob   = 100
 
+  filter = "crushers"
 }

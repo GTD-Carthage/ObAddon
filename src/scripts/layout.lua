@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1376,6 +1376,10 @@ function Layout_decorate_rooms(pass)
 
     if A.room then
       reqs.env = A.room:get_env()
+
+      if A.room.theme.theme_override then
+        reqs.theme_override = A.room.theme.theme_override
+      end
     end
 
     local prefab_def = Fab_pick(reqs, "allow_none")
@@ -1678,7 +1682,19 @@ function Layout_decorate_rooms(pass)
       -- ignore very small sinks (limited to just this chunk)
       if string.sub(sinkstat, 1, 1) == "0" then return end
 
-      reqs.is_sink = true
+      reqs.is_sink = "plain"
+
+      -- check if the sink is a liquid material
+      if A.floor_group and A.floor_group.sink then
+        if A.floor_group.sink.mat == "_LIQUID" then
+          reqs.is_sink = "liquid"
+        end
+        each liquid in GAME.LIQUIDS do
+          if A.floor_group.sink.mat == liquid.mat then
+            reqs.is_sink = "liquid"
+          end
+        end
+      end
 
       -- reduce maximum size unless *whole* chunk is in the sink
       if sinkstat != "222" then
@@ -1913,6 +1929,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     if chunk.from_area.is_porch or chunk.from_area.is_porch_neighbor then
       reqs.porch = true
+      reqs.height = chunk.from_area.ceil_h - chunk.from_area.floor_h
     end
 
     if R.is_cave then
@@ -1920,7 +1937,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     if R.is_park then
-      reqs.height = R.zone.sky_h
+      -- no actual height information at this stage apparently
+      -- re-decided in render_chunk instead if required
+      reqs.height = EXTREME_H
 
       if R.is_natural_park then
         reqs.group = "natural_walls"
@@ -1975,6 +1994,37 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
+  local function try_secondary_importants(R)
+    if not R.secondary_important then return end
+
+    local usable_chunks = {}
+    local preferred_chunk
+    local def
+
+    each chunk in R.closets do
+      if (not chunk.content or chunk.content == "DECORATION")
+      and not chunk:is_slave() then
+        table.insert(usable_chunks, chunk)
+      end
+    end
+
+    -- no chunks to place important in for some reason...
+    if table.empty(usable_chunks) then return end
+
+    preferred_chunk = rand.pick(usable_chunks)
+    -- gui.printf(table.tostr(usable_chunks,2))
+
+    reqs = preferred_chunk:base_reqs(preferred_chunk.from_dir)
+
+    reqs.kind = "sec_quest"
+    reqs.group = R.secondary_important.kind
+    reqs.shape = "U"
+
+    def = Fab_pick(reqs)
+
+    if def then preferred_chunk.prefab_def = def end
+  end
+
 
   local function pick_wall_detail(R)
     if R.is_cave    then return end
@@ -1988,13 +2038,18 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     if not tab then return end
 
-    local autodetail_odds = 35
+    local prob = THEME.wall_group_prob or 35
     if LEVEL.autodetail_group_walls_factor then
-      autodetail_odds = autodetail_odds - math.clamp(0, LEVEL.autodetail_group_walls_factor, 35)
+      prob = prob - math.clamp(0, LEVEL.autodetail_group_walls_factor, 35)
+    end
+
+    if PARAM.group_wall_prob and PARAM.group_wall_prob != "fab_default" then
+      prob = prob * (1 - PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.group_wall_prob])
+      prob = math.clamp(0, prob, 100)
     end
 
     each fg in R.floor_groups do
-      if rand.odds(autodetail_odds) then
+      if rand.odds(prob) then
         fg.wall_group = rand.key_by_probs(tab)
       end
     end
@@ -2149,7 +2204,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     }
 
     if R.theme.theme_override then
-      reqs.theme = R.theme.theme_override
+      reqs.theme_override = R.theme.theme_override
     end
 
     return Fab_pick(reqs, "none_ok")
@@ -2169,7 +2224,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     }
 
     if A.room.theme.theme_override then
-      reqs.theme = A.room.theme.theme_override
+      reqs.theme_override = A.room.theme.theme_override
     end
 
     return Fab_pick(reqs, "none_ok")
@@ -2177,7 +2232,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
 
   local function pick_decorative_bling(R)
-    local decor_prob
+    local decor_prob = rand.pick({ 20, 55, 90 })
 
     local decor_prob_tab =
     {
@@ -2188,15 +2243,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       fab_none = 0
     }
 
-    decor_prob = rand.pick({ 20, 55, 90 })
-
     if PARAM.point_prob and PARAM.point_prob != "fab_default" then
       decor_prob = decor_prob_tab[PARAM.point_prob]
-    end
-
-    -- give a small boost if it's a big room
-    if R.is_big then
-      decor_prob = math.clamp(0, decor_prob * 1.5, 100)
     end
 
     decor_prob = math.clamp(0, decor_prob / (LEVEL.autodetail_group_walls_factor / 2), 100)
@@ -2369,6 +2417,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     try_decor_closets(R)
 
+    try_secondary_importants(R)
+
     -- kill any unused closets
     each CL in R.closets do
       if not CL.content then
@@ -2447,16 +2497,30 @@ function Layout_handle_corners()
   end
 
 
-  local function near_porch(corner, mode)
+  local function near_porch(corner)
+    local diff = corner.areas[1].ceil_h
+    local near_porch = false
 
     each A in corner.areas do
-
-      if mode == "porch" then
-        if A.is_porch then return true end
-      elseif mode == "porch_neighbor" then
-        if A.is_porch_neighbor then return true end
+      if A.is_porch or A.is_porch_neighbor then
+        near_porch = true
       end
 
+      if near_porch and A.ceil_h != diff then 
+        return true
+      end
+    end
+
+    return false
+  end
+
+  
+  local function near_indoor_fence(junc)
+
+    if junc.A1.room and junc.A1.room:get_env() == "building" or
+    junc.A2.room and junc.A2.room:get_env() == "building" then
+      if junc.E1 and junc.E1.kind == "fence" then return true end
+      if junc.E2 and junc.E2.kind == "fence" then return true end
     end
 
     return false
@@ -2469,15 +2533,11 @@ function Layout_handle_corners()
 
     if mostly_env == "outdoor" then
       each A in corner.areas do
-        if A.room then
-          return A.room.zone.facade_mat
-        end
+        if A.room then return A.room.zone.facade_mat end
       end
     elseif mostly_env == "building" then
       each A in corner.areas do
-        if A.room then
-          return A.room.main_tex
-        end
+        if A.room then return A.room.main_tex end
       end
     end
 
@@ -2506,9 +2566,7 @@ function Layout_handle_corners()
         local tallest_h = -EXTREME_H
         each xjunc in corner.junctions do
           if xjunc.E1 and xjunc.E1.fence_top_z then
-            if xjunc.E1.fence_top_z > tallest_h then
-              tallest_h = xjunc.E1.fence_top_z
-            end
+            tallest_h = math.max(tallest_h, xjunc.E1.fence_top_z)
           end
         end
 
@@ -2534,42 +2592,26 @@ function Layout_handle_corners()
 
         -- indoor posts should meet the ceiling
         local tallest_h = -EXTREME_H
-        local tallest_scenic_fence_h = -EXTREME_H
 
         if mostly_env == "building" then
-
-          each A in corner.areas do
-            if A.ceil_h > tallest_h then
-              tallest_h = A.ceil_h
-            end
-          end
-          post_top_z = tallest_h
+          post_top_z = EXTREME_H
 
         else
 
           -- outdoor posts should meet up to the rail height
-          local neighbors_simple_fence = false
           each A in corner.areas do
 
-            if A.border_type then
-              if A.border_type == "simple_fence" then
-                neighbors_simple_fence = true
-              end
-            end
-
             if A.is_porch or A.is_porch_neighbor then
-              tallest_h = A.zone.sky_h
+              tallest_h = EXTREME_H
               continue
             end
 
+            tallest_h = math.max(tallest_h, A.floor_h + assert(junc.E1.rail_offset))
+
             if A.floor_h then
-              if A.floor_h > tallest_h then
-                tallest_h = A.floor_h
-              end
+              tallest_h = math.max(tallest_h, A.floor_h)
             end
           end
-
-          tallest_h = tallest_h + assert(junc.E1.rail_offset)
 
           post_top_z = tallest_h
         end
@@ -2598,9 +2640,6 @@ function Layout_handle_corners()
 
       if not Corner_is_at_area_corner(corner) then return end
 
-      if junc.A1.dead_end or junc.A2.dead_end
-      and junc.A1.room:get_env() == "building" then return end
-
       -- don't put pillars adjacent to joiners and closets
       each S in corner.seeds do
         if S.chunk then
@@ -2611,27 +2650,11 @@ function Layout_handle_corners()
         end
       end
 
-      -- create support pillars on the corners of fenceposts
-      if near_porch(corner, "porch") then
+      -- create support pillars on the corners
+      -- where sky and ceilings of any other texture meet 
+      if near_porch(corner) 
+      or near_indoor_fence(junc) then
         pillar_it = true
-      end
-
-      if near_porch(corner, "porch_neighbor") then
-
-        each S in corner.seeds do
-
-          if S.chunk then
-            if S.chunk.kind == "stair" then
-              pillar_it = true
-            end
-          end
-
-          if S.area.mode == "liquid" then
-            pillar_it = true
-          end
-
-        end
-
       end
     end
 

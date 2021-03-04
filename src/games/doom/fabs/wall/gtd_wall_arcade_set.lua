@@ -7,7 +7,7 @@ PREFABS.Wall_gtd_arcade_machine_wall =
 
   group = "gtd_wall_arcade"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   where  = "edge"
 
@@ -30,5 +30,13 @@ PREFABS.Wall_gtd_arcade_machine_wall =
     ARCD9 = 1
     ARCD10 = 1
     ARCD11 = 1
+  }
+
+  sector_13 = {
+    [0] = 5
+    [1] = 5
+    [2] = 5
+    [13] = 5
+    [21] = 5
   }
 }

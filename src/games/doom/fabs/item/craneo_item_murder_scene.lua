@@ -3,7 +3,7 @@ PREFABS.Item_craneo_murder_scene =
   file  = "item/craneo_item_murder_scene.wad"
 
   map   = "MAP01"
-  prob  = 25
+  prob  = 100
 
   size  = 64
 
@@ -13,5 +13,5 @@ PREFABS.Item_craneo_murder_scene =
   theme = "urban"
   env   = "outdoor"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }

@@ -7,7 +7,7 @@ PREFABS.Pic_armaetus_double_fans =
   env = "building"
   theme = "!hell"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   where = "seeds"
   height = 128
@@ -35,4 +35,32 @@ PREFABS.Pic_armaetus_double_fans_hell =
   theme = "hell"
 
   tex_DOORSTOP = "METAL"
+}
+
+--
+
+PREFABS.Pic_arm_gtd_vented_fan =
+{
+  template = "Pic_armaetus_double_fans"
+  map = "MAP02"
+
+  prob = 15
+
+  env = "!cave"
+
+  x_fit = { 148,160 }
+  z_fit = { 48,56 }
+}
+
+PREFABS.Pic_arm_gtd_vented_fan_double =
+{
+  template = "Pic_armaetus_double_fans"
+  map = "MAP03"
+
+  prob = 15
+
+  env = "!cave"
+
+  x_fit = { 104,120 }
+  z_fit = "top"
 }

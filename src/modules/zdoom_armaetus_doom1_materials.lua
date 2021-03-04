@@ -17,7 +17,7 @@
 --
 ------------------------------------------------------------------
 
-ARMAETUS_DOOM1_LIQUIDS =
+ARMAETUS_DOOM1_LIQUID_MATS =
 {
   hotlava  = { mat="XLAV1", special=5, light_add=56, damage=10 }
   magma  = { mat="MAGMA1",  special=5, light_add=56, damage=10 }
@@ -661,7 +661,7 @@ ARMAETUS_DOOM1_MATERIALS = {
   TEKGRY01 = { t="TEKGRY01", f="RROCK21" }
   TEKGRY02 = { t="TEKGRY02", f="RROCK21" }
   TEKSHAW = { t="TEKSHAW", f="SHINY02" }
-  TKWALL2 = { t="TKWALL2", f="CEIL5_1" }
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
   TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
   TEKWALL7 = { t="TEKWALL7", f="FLOOR7_1" }
   TEKWALL8 = { t="TEKWALL8", f="TEK1" } -- Red
@@ -1241,6 +1241,23 @@ ARMAETUS_DOOM1_MATERIALS = {
   MONYFRON = { t="MONYFRON", f="MONYFLAT"}
   MONYSIDE = { t="MONYSIDE", f="MONYFLAT"}
   MONYFLAT = { t="MONYFRON", f="MONYFLAT"}
+
+  CREYEWLL = { t="CREYEWLL", f="FLAT15"} -- red skin wall with eyes
+  CRFSHWLL = { t="CRFSHWLL", f="FLAT15"} -- red flesh wall
+  CRGRSWLL = { t="CRGRSWLL", f="FLAT5_5"} -- brown flesh wall with lacerations
+  CRHRTWLL = { t="CRHRTWLL", f="FLAT15"} -- red flesh wall with lacerations
+
+  -- Craneo's arcade machine screens
+  ARCD2 = { t="ARCD2", f="CEIL4_3"}
+  ARCD3 = { t="ARCD3", f="CEIL4_3"}
+  ARCD4 = { t="ARCD4", f="CEIL4_3"}
+  ARCD5 = { t="ARCD5", f="CEIL4_3"}
+  ARCD6 = { t="ARCD6", f="CEIL4_3"}
+  ARCD7 = { t="ARCD7", f="CEIL4_3"}
+  ARCD8 = { t="ARCD8", f="CEIL4_3"}
+  ARCD9 = { t="ARCD9", f="CEIL4_3"}
+  ARCD10 = { t="ARCD10", f="CEIL4_3"}
+  ARCD11 = { t="ARCD11", f="CEIL4_3"}
 
   ----------------------------------------
   -- End new animated non-liquid floors --

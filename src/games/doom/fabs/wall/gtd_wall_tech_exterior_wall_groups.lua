@@ -262,7 +262,7 @@ PREFABS.Wall_outdoor_shiny_silver_overhang_EPIC =
 
   map = "MAP13"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
   replaces = "Wall_outdoor_shiny_silver_overhang"
 
   group = "tech_o_shiny_silver_overhang"
@@ -310,7 +310,7 @@ PREFABS.Wall_tech_caution_bracket_silver_scaffolding_EPIC =
   group = "tech_o_silver_scaffolding"
 
   replaces = "Wall_tech_caution_bracket_silver_scaffolding"
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   z_fit = { 56,72 }
 }
@@ -333,7 +333,7 @@ PREFABS.Wall_tech_fence_lights_uac_thing = --#
   template = "Wall_tech_outdoor_caution_strip"
   map = "MAP16"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   group = "tech_o_fence_lights_uac_thing"
 
@@ -350,7 +350,7 @@ PREFABS.Wall_tech_fence_lights_uac_thing_EPIC =
   map = "MAP16"
 
   replaces = "Wall_tech_fence_lights_uac_thing"
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   group = "tech_o_fence_lights_uac_thing"
 
@@ -384,7 +384,7 @@ PREFABS.Wall_tech_outdoor_tekgren_grates_thing_EPIC =
 
   replaces = "Wall_tech_outdoor_tekgren_grates_thing"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   z_fit = "top"
 }
@@ -435,7 +435,7 @@ PREFABS.Wall_tech_outdoor_compblue_tall_EPIC = --#
 
   replaces = "Wall_tech_outdoor_compblue_tall"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   group = "tech_o_compblue_tall"
 
@@ -461,7 +461,7 @@ PREFABS.Wall_tech_outdoor_grey_metal_sloped_EPIC = --#
 
   engine = "zdoom"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   replaces = "Wall_tech_outdoor_grey_metal_sloped"
 
@@ -494,4 +494,29 @@ PREFABS.Wall_tech_outdoor_tall_light = --#
   group = "tech_o_tall_light"
 
   z_fit = "top"
+}
+
+PREFABS.Wall_tech_outdoor_tall_light_alt_color = --#
+{
+  template = "Wall_tech_outdoor_caution_strip"
+  map = "MAP21"
+
+  group = "tech_o_tall_light_alt"
+
+  tex_COMPBLUE = "REDWALL"
+  tex_CEIL4_3 = "FLOOR1_6"
+
+  z_fit = "top"
+}
+
+PREFABS.Wall_hexagon_uac_spotlights = --#
+{
+  template = "Wall_tech_outdoor_caution_strip"
+  map = "MAP22"
+
+  texture_pack = "armaetus"
+
+  group = "tech_o_hexagon_uac_spotlights"
+
+  z_fit = { 64,72  }
 }

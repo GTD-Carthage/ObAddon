@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2019 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -755,6 +755,15 @@ function Junction_make_wall(junc)
 
     E.wall_mat = Junction_calc_wall_tex(A1, A2)
 
+    local plain_wall_prob = 0
+
+    if PARAM.wall_prob and PARAM.wall_prob != "fab_default" then
+      plain_wall_prob = plain_wall_prob + (PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] * 100)
+      plain_wall_prob = math.clamp(0, plain_wall_prob, 100)
+    end
+
+    if rand.odds(plain_wall_prob) then E.plain = true end
+
     if pass == 1 then
       junc.E1 = E
     else
@@ -884,8 +893,8 @@ function Junction_make_railing(junc, rail_mat, block)
 
   local offset_h = 0
   if rail_mat == "FENCE_MAT_FROM_THEME" then
-    rail_mat = junc.A1.room.scenic_fence.t
-    offset_h = junc.A1.room.scenic_fence.rail_h
+    rail_mat = junc.A1.room.scenic_fences.t
+    offset_h = junc.A1.room.scenic_fences.rail_h
   elseif not rail_mat then
     rail_mat = "MIDBARS3"
     offset_h = 96
@@ -898,6 +907,20 @@ function Junction_make_railing(junc, rail_mat, block)
     rail_block = block and 1
     area = junc.A1
   }
+
+  -- 3D midtex blocking support for rails
+  if PARAM.passable_railings then
+    if PARAM.passable_railings == "on_occasion" then
+      if junc.A1.room and junc.A2.room
+      and not (junc.A1.mode == "cage" or junc.A2.mode == "cage") then
+        junc.E1.rail_3dmidtex = 1
+        junc.E1.rail_block = nil
+      end
+    elseif PARAM.passable_railings == "always" then
+      junc.E1.rail_3dmidtex = 1
+      junc.E1.rail_block = nil
+    end
+  end
 
   -- calculate base Z
   -- TODO : handle "nature" areas better (checks cells along the junction)
@@ -1272,6 +1295,17 @@ function Corner_is_at_area_corner(corner)
       return true
     end
 
+  end
+
+  -- corner is by at least one diagonal and is between two areas
+  if #corner.areas > 1 then
+    local diagonal_score = 0
+
+    each S in corner.seeds do
+      if S.top then diagonal_score = diagonal_score + 1 end
+    end
+
+    if diagonal_score == 1 then return true end
   end
 
   return false

@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2008-2017 Andrew Apted
---  Copyright (C) 2019 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -171,29 +171,19 @@ function Render_edge(E)
 
   local function pick_wall_prefab()
 
-    local function check_area_state(seed, other_seed, mode)
+    local function check_area_state(S1, S2, mode)
 
       if mode == "narrow_area" then
-        if seed.area != other_seed.area then
-          return true
-        end
+        if S1.area != S2.area then return true end
       end
 
       if mode == "potentially_obstructing" then
 
-        if not other_seed.area then
-          return true
-        end
+        if not S2.area then return true end
 
-        if seed.area.room and other_seed.area.room then
-          if seed.area.room != other_seed.area.room then
-            return true
-          end
-
-          if other_seed.area.chunk then
-            return true
-          end
-
+        if S1.area.room and S2.area.room then
+          if S1.area.room != S2.area.room then return true end
+          if S2.area.chunk then return true end
         end
       end
 
@@ -253,10 +243,9 @@ function Render_edge(E)
       reqs.group = "natural_walls"
     end
 
-    -- REMOVE-ME
     -- Don't get prefabs with a z_fit other than "top" for parks.
     if A.room and A.room.is_park then
-      if not E.S.floor_h then
+      if not E.S.floor_h and A.room.park_type == "hills" then
         reqs.no_top_fit = true
       end
     end
@@ -267,35 +256,29 @@ function Render_edge(E)
 
       -- don't allow more than one wall that's not flat enough
       -- on the same seed
-      if E.S.walls then
-        each W in E.S.walls do
-          if W.deep then
-            if W.deep > 16 then
-              reqs.deep = 16
-            end
-          end
-        end
+      if E.S.wall_depth and E.S.wall_depth > 16 then
+        reqs.deep = 16
       end
 
       -- don't allow anything more than flat walls if
       -- at least one seed ahead is not in the same area
       -- as the current wall
       local tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, 128)
-      local o_s = Seed_from_coord(tx, ty)
+      local S2 = Seed_from_coord(tx, ty)
 
-      if check_area_state(E.S, o_s, "narrow_area") then
+      if check_area_state(E.S, S2, "narrow_area") then
         reqs.deep = 16
       end
 
       -- use only flat walls if in a corner
       tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.LEFT[dir], 128)
-      o_s = Seed_from_coord(tx, ty)
-      if check_area_state(E.S, o_s, "potentially_obstructing") then
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(E.S, S2, "potentially_obstructing") then
         reqs.deep = 16
       end
       tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, geom.RIGHT[dir], 128)
-      o_s = Seed_from_coord(tx, ty)
-      if check_area_state(E.S, o_s, "potentially_obstructing") then
+      S2 = Seed_from_coord(tx, ty)
+      if check_area_state(E.S, S2, "potentially_obstructing") then
         reqs.deep = 16
       end
 
@@ -328,35 +311,35 @@ function Render_edge(E)
       -- i.e. fake doors and windows
       reqs.has_solid_back = true
       tx, ty = geom.nudge(E.S.mid_x, E.S.mid_y, 10-dir, -128)
-      o_s = Seed_from_coord(tx, ty)
+      S2 = Seed_from_coord(tx, ty)
 
       -- if seeds on either side don't belong to the same room
       -- then it's not solid
-      if o_s.area then
+      if S2.area then
         reqs.has_solid_back = false
 
-        if o_s.area.mode == "liquid" then
+        if S2.area.mode == "liquid" then
           reqs.has_solid_back = false
         end
 
         -- override: but if there are height differences
         -- why not allow it?
-        if o_s.area.floor_h and E.S.area.floor_h then
-          if o_s.area.floor_h >= E.S.area.floor_h + 128 then
+        if S2.area.floor_h and E.S.area.floor_h then
+          if S2.area.floor_h >= E.S.area.floor_h + 128 then
             reqs.has_solid_back = true
           end
         end
-        if o_s.area.ceil_h and E.S.area.ceil_h then
-          if o_s.area.ceil_h <= E.S.area.floor_h then
+        if S2.area.ceil_h and E.S.area.ceil_h then
+          if S2.area.ceil_h <= E.S.area.floor_h then
             reqs.has_solid_back = true
           end
         end
 
-        if o_s.area.chunk then
+        if S2.area.chunk then
           reqs.has_solid_back = false
         end
 
-        if o_s.area.mode == "void" then
+        if S2.area.mode == "void" then
           reqs.has_solid_back = true
         end
       end
@@ -369,15 +352,10 @@ function Render_edge(E)
 
     local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
 
-    -- autodetail override
-    if LEVEL.autodetail_plain_walls_factor then
-      if rand.odds(math.clamp(0, LEVEL.autodetail_plain_walls_factor * 1.25, 100)) then
-        if reqs.where == "edge" then
-          def = PREFABS["Wall_plain"]
-        elseif reqs.where == "diagonal" then
-          def = PREFABS["Wall_plain_diag"]
-        end
-      end
+    -- autodetail and prefab control override
+    if E.plain then
+      if reqs.where == "edge" then def = PREFABS["Wall_plain"]
+      elseif reqs.where == "diagonal" then def = PREFABS["Wall_plain_diag"] end
     end
 
     -- when a wall group is not selected, use the ungrouped walls
@@ -385,6 +363,8 @@ function Render_edge(E)
       reqs.group = nil
       def = Fab_pick(reqs)
     end
+
+    E.S.wall_depth = math.max(E.S.wall_depth or 16, def.deep or 16)
 
     return def
   end
@@ -395,7 +375,7 @@ function Render_edge(E)
     {
       kind = "fence"
 
-      group = assert(E.area.room.fence_type)
+      group = assert(E.area.room.fence_group)
 
       seed_w = assert(E.long)
     }
@@ -418,7 +398,7 @@ function Render_edge(E)
     {
       kind = "beam"
 
-      group = assert(E.area.room.beam_type)
+      group = assert(E.area.room.beam_group)
 
       seed_w = assert(E.long)
     }
@@ -517,14 +497,6 @@ function Render_edge(E)
 
     local def = pick_wall_prefab()
 
-    E.deep = def.deep
-
-    if not E.S.walls then
-      E.S.walls = {}
-    end
-
-    table.insert(E.S.walls, E)
-
     local z1 = A.floor_h
     local z2 = A.ceil_h
 
@@ -572,6 +544,7 @@ function Render_edge(E)
       v1  = 0
 
       blocked = E.rail_block
+      tridee_midtex = E.rail_3dmidtex
     }
 
     local x1,y1, x2,y2 = Edge_line_coords(E)
@@ -973,20 +946,9 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over, flip_it)
     end
 
-    -- MSSP-TODO: Remove extra unnecessary stuff here if things absolutely work
     if def.z_fit then
       local min_ceil = math.min(E.area.ceil_h, E.peer.area.ceil_h)
-      --local max_floor = z
-
-      --[[if E.kind == "window" then
-        max_floor = math.max(E.area.floor_h, E.peer.area.floor_h)
-        if E.area.mode and E.area.mode == "nature" then max_floor = E.area.max_floor_h end
-      elseif E.kind == "doorway" then
-        max_floor = z
-      end]]
-
-      Trans.set_fitted_z(T, --[[max_floor]] z, min_ceil)
-
+      Trans.set_fitted_z(T, z, min_ceil)
     end
 
     -- choose lighting to be the minimum of each side
@@ -1153,7 +1115,7 @@ function Render_corner(cx, cy)
 
     local T = Trans.spot_transform(mx, my, 1024, dir)
 
-    local skin = {wall=mat}
+    local skin = { wall=mat }
 
     Fabricate(nil, def, T, {skin})
   end
@@ -2347,6 +2309,23 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   local function do_decoration()
     -- prefab already chosen
     assert(chunk.prefab_def)
+
+    -- hack for normal parks - no height info
+    -- is available when the fab is initially
+    -- picked, so pick a new one if the height
+    -- has a mismatch
+    if R.is_park and not R.is_natural_park then
+      local h_diff = R.zone.sky_h - chunk.floor_h
+
+      if chunk.prefab_def.height and
+      chunk.prefab_def.height > h_diff then
+        chunk.prefab_def = nil
+        reqs.kind = "picture"
+        reqs.height = h_diff
+
+        gui.printf("SHIT HAPPENED!\n")
+      end
+    end
   end
 
   local function do_teleporter()
@@ -2461,6 +2440,37 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     return x1,y1, x2,y2
   end
 
+  -- code for peered exits
+  local function check_peered_exits(def, chunk)
+    if def.kind == "start" then
+      local p_start_fab = {}
+
+      if SCRIPTS.start_fab_peer then
+        p_start_fab = PREFABS[SCRIPTS.start_fab_peer]
+
+        SCRIPTS.start_fab_peer = nil
+
+        -- check chunk sizes
+        if p_start_fab.seed_h <= chunk.sh
+        and p_start_fab.seed_w <= chunk.sw then
+          return p_start_fab
+        else
+          return nil
+        end
+      end
+    end
+
+    if def.kind == "exit" then
+      if def.start_fab_peer then
+        if type(def.start_fab_peer) == "table" then
+          SCRIPTS.start_fab_peer = rand.pick(def.start_fab_peer)
+        else
+          SCRIPTS.start_fab_peer = def.start_fab_peer
+        end
+      end
+    end
+  end
+
 
   ---| Render_chunk |---
 
@@ -2570,10 +2580,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
 
   --- pick the prefab ---
-
-  if reqs.env == "park" and reqs.key == "secret" then
-    gui.printf("Reqs: " .. table.tostr(reqs) .. "\n")
-  end
 
   local def = chunk.prefab_def or Fab_pick(reqs, "none_ok")
 
@@ -2687,6 +2693,13 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   end
 
   Ambient_push(A.lighting)
+
+  if PARAM.peered_exits and PARAM.peered_exits == "yes" then
+    local start_fab_override = check_peered_exits(def, chunk)
+    if start_fab_override then
+      def = start_fab_override
+    end
+  end
 
   Fabricate(A.room, def, T, { skin })
 
@@ -2857,13 +2870,14 @@ end
 
 
 function Render_skybox()
-  if not LEVEL.skybox then return end
+  local skybox = LEVEL.skybox or LEVEL.episode.skybox
+  if not skybox then return end
 
   local x = SEED_W * SEED_SIZE - 512
   local y = SEED_H * SEED_SIZE + 1024 -- should probably the actual prefab bbox size
 
   local T = Trans.spot_transform(x, y, 0, 0)
-  Fabricate(nil, LEVEL.skybox, T, {})
+  Fabricate(nil, skybox, T, {})
 end
 
 
@@ -3473,8 +3487,8 @@ function Render_scenic_fabs()
       local def = Fab_pick(reqs, "none_ok")
 
       if def then
-        local fx = x * SEED_SIZE
-        local fy = y * SEED_SIZE
+        local fx = x * SEED_SIZE + 32
+        local fy = y * SEED_SIZE + 32
 
         local fab =
         {

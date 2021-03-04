@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --  Copyright (C) 2020 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
@@ -194,24 +194,62 @@ function Level_determine_map_size(LEV)
       trans=3
     }
 
+    local MIXED_PROBS_SKEW_SMALL =
+    {
+      micro=384,
+      mini=256,
+      tiny=170,
+      small=114,
+      average=76,
+      large=51,
+      huge=34,
+      colossal=23,
+      gargan=15,
+      trans=10
+    }
+
+    local MIXED_PROBS_SKEW_LARGE =
+    {
+      micro=10,
+      mini=15,
+      tiny=23,
+      small=34,
+      average=51,
+      large=76,
+      huge=114,
+      colossal=170,
+      gargan=256,
+      trans=384
+    }
+
+    local prob_table = MIXED_PROBS
+
+    if PARAM.level_size_bias then
+      if PARAM.level_size_bias == "small" then
+        prob_table = MIXED_PROBS_SKEW_SMALL
+      elseif PARAM.level_size_bias == "large" then
+        prob_table = MIXED_PROBS_SKEW_LARGE
+      end
+    end
+
     -- Level Control fine tune for Mix It Up
     if PARAM.level_upper_bound then
-      each k,v in MIXED_PROBS do
+      each k,v in prob_table do
         if SIZES[k] > SIZES[PARAM.level_upper_bound] then
-          MIXED_PROBS[k] = 0
+          prob_table[k] = 0
         end
       end
     end
 
     if PARAM.level_lower_bound then
-      each k,v in MIXED_PROBS do
+      each k,v in prob_table do
         if SIZES[k] < SIZES[PARAM.level_lower_bound] then
-          MIXED_PROBS[k] = 0
+          prob_table[k] = 0
         end
       end
     end
 
-    ob_size = rand.key_by_probs(MIXED_PROBS)
+    ob_size = rand.key_by_probs(prob_table)
   end
 
   if ob_size == "prog" or ob_size == "epi" then
@@ -268,22 +306,11 @@ function Episode_determine_map_sizes()
     local W, H = Level_determine_map_size(LEV)
 
     if LEV.is_procedural_gotcha == true then
+      W = 26 -- defualt for proc gotchas
       if PARAM.gotcha_map_size then
-        if PARAM.gotcha_map_size == "large" then
-          W = 30
-        elseif PARAM.gotcha_map_size == "regular" then
-          W = 26
-        elseif PARAM.gotcha_map_size == "small" then
-          W = 22
-        elseif PARAM.gotcha_map_size == "tiny" then
-          W = 16
-        end
-      else
-        W = 26
+        W = PROC_GOTCHA_MAP_SIZES[PARAM.gotcha_map_size]
       end
-      if LEV.is_procedural_gotcha == true and PARAM.boss_gen then
-        W = 16
-      end
+      if PARAM.boss_gen then W = 16 end
       H = W
     end
 
@@ -293,6 +320,40 @@ function Episode_determine_map_sizes()
     LEV.map_W = W
     LEV.map_H = H
 
+    -- part of the experimental size multiplier experiments
+    LEV.size_multiplier = 1
+    LEV.area_multiplier = 1
+    LEV.size_consistency = "normal"
+
+    if PARAM.room_size_multiplier then
+      if PARAM.room_size_multiplier == "mixed" then
+        LEV.size_multiplier = rand.key_by_probs(ROOM_SIZE_MULTIPLIER_MIXED_PROBS)
+      elseif PARAM.room_size_multiplier != "vanilla" then
+        LEV.size_multiplier = tonumber(PARAM.room_size_multiplier)
+      end
+    end
+
+    if PARAM.room_area_multiplier then
+      if PARAM.room_area_multiplier == "mixed" then
+        LEV.area_multiplier = rand.key_by_probs(ROOM_AREA_MULTIPLIER_MIXED_PROBS)
+      elseif PARAM.room_area_multiplier != "vanilla" then
+        LEV.area_multiplier = tonumber(PARAM.room_area_multiplier)
+      end
+    end
+
+    if PARAM.room_size_consistency then
+      if PARAM.room_size_consistency == "mixed" then
+        LEV.size_consistency = rand.key_by_probs(SIZE_CONSISTENCY_MIXED_PROBS)
+      else
+        LEV.size_consistency = PARAM.room_size_consistency
+      end
+    end
+
+    gui.printf(
+      "size_multiplier: " .. LEV.size_multiplier .. "\n" ..
+      "area_multiplier: " .. LEV.area_multiplier .. "\n" ..
+      "size_consistency: " .. LEV.size_consistency .. "\n\n"
+    )
   end
 end
 
@@ -495,15 +556,7 @@ function Episode_plan_monsters()
           gotcha_strength = 16
         end
       elseif PARAM.gotcha_strength then
-        if PARAM.gotcha_strength == "none" then
-          gotcha_strength = 0
-        elseif PARAM.gotcha_strength == "harder" then
-          gotcha_strength = 2
-        elseif PARAM.gotcha_strength == "tougher" then
-          gotcha_strength = 4
-        elseif PARAM.gotcha_strength == "crazier" then
-          gotcha_strength = 8
-        end
+        gotcha_strength = PROC_GOTCHA_STRENGTH_LEVEL[PARAM.gotcha_strength]
       end
 
       LEV.monster_level = mon_along + gotcha_strength
@@ -2150,14 +2203,14 @@ function Level_choose_themes()
     if table.empty(new_tab) then return end
 
     if mode == "mostly" then
-      local pos = rand.pick({ 3,4,4,5 })
+      local pos = rand.pick({ 3,4,4,5,5,6 })
 
       while pos <= #EPI.levels do
         local LEV = EPI.levels[pos]
 
         mixins[LEV.name] = rand.key_by_probs(new_tab)
 
-        pos = pos + rand.pick({ 3,4 })
+        pos = pos + rand.pick({ 3,4,4,5,5 })
       end
     elseif mode == "less" then
       local pos = 1
@@ -2173,7 +2226,7 @@ function Level_choose_themes()
           countdown = countdown - 1
         elseif countdown <= 0 then
           mixins[LEV.name] = main_theme
-          countdown = rand.pick({ 2,3,3,4 })
+          countdown = rand.pick({ 2,3,3,4,4,5 })
           prev_theme = rand.key_by_probs(new_tab)
           new_tab[prev_theme] = new_tab[prev_theme] / 10
         end
@@ -2250,9 +2303,9 @@ function Level_choose_themes()
   end
 
 
-  local function set_single_theme(name)
+  local function set_single_theme(theme_name)
     each EPI in GAME.episodes do
-      set_an_episode(EPI, name)
+      set_an_episode(EPI, theme_name)
     end
   end
 
@@ -2486,7 +2539,19 @@ function Level_choose_liquid()
   LEVEL.liquid_usage = usage
 
   -- pick the liquid to use
-  local name = rand.key_by_probs(THEME.liquids)
+  local liq_tab = THEME.liquids
+
+  -- exclude liquids from certain environment themes
+  if LEVEL.outdoor_theme then
+    if THEME.liquids.exclusions
+    and THEME.liquids.exclusions[LEVEL.outdoor_theme] then
+      each L in THEME.liquids.exclusions[LEVEL.outdoor_theme] do
+        liq_tab[L] = 0
+      end
+    end
+  end
+
+  local name = rand.key_by_probs(liq_tab)
   local liquid = GAME.LIQUIDS[name]
 
   if not liquid then
@@ -2546,50 +2611,98 @@ end
 function Level_choose_skybox()
   local skyfab
 
+  local function Choose_episodic_skybox(force_pick)
+    if not LEVEL.episode.skybox or force_pick then
+      return PREFABS[rand.key_by_probs(THEME.skyboxes)]
+    else
+      return LEVEL.episode.skybox
+    end
+  end
+
+  local function Choose_skybox(mode)
+    if mode == "random" then
+      local reqs =
+      {
+        kind = "skybox"
+        where = "point"
+        size = 1
+      }
+      local def = Fab_pick(reqs)
+      return assert(def)
+
+    elseif mode == "themed" then
+      return PREFABS[rand.key_by_probs(THEME.skyboxes)]
+
+    elseif mode == "generic" then
+      if PARAM.epic_textures_activated then
+        return PREFABS["Skybox_hellish_city_EPIC"]
+      else
+        return PREFABS["Skybox_hellish_city"]
+      end
+    end
+  end
+
   if table.empty(THEME.skyboxes) then
     gui.printf("WARNING! No skybox table for theme: " .. LEVEL.theme_name .. "\n")
     return
   end
 
-  if OB_CONFIG.zdoom_skybox == "random" then
-    local reqs =
-    {
-      kind = "skybox"
-      where = "point"
-      size = 1
-    }
+  if OB_CONFIG.zdoom_skybox == "disable" then return end
 
-    local def = Fab_pick(reqs)
+  local same_skyfab = "yes"
 
-    skyfab = assert(def)
-
-  elseif OB_CONFIG.zdoom_skybox == "themed" then
-    skyfab = PREFABS[rand.key_by_probs(THEME.skyboxes)]
-
-  elseif OB_CONFIG.zdoom_skybox == "episodic" then
-    if not LEVEL.episode.skybox then
-      LEVEL.episode.skybox = PREFABS[rand.key_by_probs(THEME.skyboxes)]
-    end
+  if OB_CONFIG.zdoom_skybox == "episodic" then
+    LEVEL.episode.skybox = Choose_episodic_skybox()
     skyfab = LEVEL.episode.skybox
-
-  elseif OB_CONFIG.zdoom_skybox == "generic" then
-    if PARAM.epic_textures_activated then
-      skyfab = PREFABS["Skybox_hellish_city_EPIC"]
-    else
-      skyfab = PREFABS["Skybox_hellish_city"]
-    end
-
+  else
+    LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
+    skyfab = LEVEL.skybox
   end
 
-  if not skyfab and OB_CONFIG.zdoom_skybox != "disable" then
-    gui.printf("WARNING: Could not find a proper skybox for theme '" .. LEVEL.theme_name .. "'\n")
+  -- check against exclusions
+  if LEVEL.outdoor_theme and LEVEL.outdoor_theme != "temperate"
+  and ARMAETUS_SKYBOX_EXCLUSIONS then
+
+    local pick_attempts = 0
+    while same_skyfab == "yes" do
+
+      each ex in ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme] do
+        if OB_CONFIG.zdoom_skybox == "episodic" then
+          if LEVEL.episode.skybox.name == ex then
+            same_skyfab = "yes"
+          else same_skyfab = "no" end
+        elseif OB_CONFIG.zdoom_skybox != "disable" then
+          if LEVEL.skybox.name == ex then
+            same_skyfab = "yes"
+          else same_skyfab = "no" end
+        end
+      end
+
+      if same_skyfab == "yes" then
+        if OB_CONFIG.zdoom_skybox == "episodic" then
+          LEVEL.episode.skybox = Choose_episodic_skybox("force_it")
+          skyfab = LEVEL.episode.skybox
+        else
+          LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
+          skyfab = LEVEL.skybox
+        end
+      end
+
+      pick_attempts = pick_attempts + 1
+      if pick_attempts > 10 then 
+        gui.printf(table.tostr(ARMAETUS_SKYBOX_EXCLUSIONS[LEVEL.outdoor_theme]))
+        error("Skybox pick repeated too many times!!!! Global warming is real and " ..
+        "a billion pigs have been killed by swine flu!!!!") 
+      end
+
+    end
   end
 
   if skyfab then
-    gui.printf("Skybox: " .. skyfab.name .. "\n")
+    gui.printf("Level skybox: " .. skyfab.name .. "\n")
+  else
+    gui.printf("WARNING: Could not find a proper skybox for theme '" .. LEVEL.theme_name .. "'\n")
   end
-
-  LEVEL.skybox = skyfab
 end
 
 
@@ -2742,6 +2855,8 @@ function Level_make_level(LEV)
   end
 
 
+  LEVEL.secondary_importants = {}
+
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
@@ -2792,6 +2907,22 @@ end
 function Level_make_all()
   GAME.levels   = {}
   GAME.episodes = {}
+
+  -- semi-supported games warning
+  if OB_CONFIG.game != "doom2" then
+    if not PARAM.extra_games or PARAM.extra_games != "yes" then
+      error("Warning: ObAddon development is mostly focused " ..
+    "on creating content for the Doom 2 game setting.\n\n" ..
+    "As a consequence, other games available on the list are " ..
+    "lagging behind in features. These games' " ..
+    "content and feature set are currently " ..
+    "only updated for compatibility being legacy choices " ..
+    "provided by vanilla Oblige. To ignore this warning " ..
+    "and continue generation for these games, set " ..
+    "Extra Games under Debug Control Module to 'Yes'.\n\n" ..
+    "This message will change should development scope expand.")
+    end
+  end
 
 
   gui.rand_seed(OB_CONFIG.seed + 1)

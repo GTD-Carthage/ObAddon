@@ -92,7 +92,7 @@ PREFABS.Pic_urban_downtown_facade1_EPIC =
 
   replaces = "Pic_urban_downtown_facade1_vanilla"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   seed_w = 2
   seed_h = 1
@@ -303,7 +303,7 @@ PREFABS.Pic_urban_downtown_facade3_EPIC =
 
   replaces = "Pic_urban_downtown_facade3_vanilla"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   seed_w = 2
   seed_h = 1
@@ -358,7 +358,7 @@ PREFABS.Pic_urban_downtown_facade_EPIC_destroyed =
   replaces = nil
 
   skip_prob = 50
-  prob = 100
+  prob = 80
 
   over = 0
 
@@ -381,7 +381,7 @@ PREFABS.Pic_urban_downtown_facade_alley =
   template = "Pic_urban_downtown_facade3_EPIC"
   map = "MAP06"
 
-  height = 160
+  height = 256
 
   in_porches = "never"
 
@@ -393,47 +393,59 @@ PREFABS.Pic_urban_downtown_facade_alley =
   z_fit = { 72,80 }
 }
 
-PREFABS.Pic_urban_downtown_facade_sunk_roof =
+PREFABS.Pic_urban_downtown_facade_fenced_roof =
 {
   template = "Pic_urban_downtown_facade3_EPIC"
   map = "MAP07"
 
-  prob = 125
+  height = 304
+
+  prob = 150
 
   in_porches = "never"
 
-  z_fit = { 254,255 }
+  y_fit = { 16,122 }
+  z_fit = { 144,156 }
 
   bound_z1 = 0
-  bound_z2 = 256
+  bound_z2 = 304
+
+  tex_MIDBARS3 =
+  {
+    MIDBARS3 = 1
+    MIDSPACE = 1
+    MIDSPAC2 = 1
+    MIDSPAC3 = 1
+    MIDSPAC4 = 1
+    MIDSPAC5 = 1
+    MIDWIND1 = 1
+    MIDWIND6 = 1
+    FENCE1 = 1
+    FENCE2 = 1
+    FENCE3 = 1
+    FENCE6 = 1
+    FENCE7 = 1
+  }
 }
 
-PREFABS.Pic_urban_downtown_facade_sunk_roof_lower =
+PREFABS.Pic_urban_downtown_facade_destroyed_roof =
 {
   template = "Pic_urban_downtown_facade3_EPIC"
-  map = "MAP07"
+  map = "MAP08"
 
-  prob = 125
+  height = 240
+
+  skip_prob = 50
+  prob = 80
+
+  deep = 16
 
   in_porches = "never"
 
-  z_fit = { 243,256 }
+  x_fit = { 16,240 }
+  y_fit = "top"
+  z_fit = { 88,104 , 216,236 }
 
   bound_z1 = 0
-  bound_z2 = 256
-}
-
-PREFABS.Pic_urban_downtown_facade_sunk_roof_lower_2 =
-{
-  template = "Pic_urban_downtown_facade3_EPIC"
-  map = "MAP07"
-
-  prob = 125
-
-  in_porches = "never"
-
-  z_fit = { 242,256 }
-
-  bound_z1 = 0
-  bound_z2 = 256
+  bound_z2 = 240
 }

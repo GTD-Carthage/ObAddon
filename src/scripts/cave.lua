@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2009-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1695,6 +1695,7 @@ function Cave_floor_heights(R, entry_h)
 
 
   local function find_entry_area()
+
     local e_blob = area.entry_walk
 
     local cx = (e_blob.cx1 + e_blob.cx2) / 2
@@ -1702,18 +1703,29 @@ function Cave_floor_heights(R, entry_h)
     local nearest_dist = EXTREME_H
 
     each WF in area.walk_floors do
-      local cx_c = (WF.cx1 + WF.cx2) / 2
+      --[[local cx_c = (WF.cx1 + WF.cx2) / 2
       local cy_c = (WF.cy1 + WF.cy2) / 2
 
+      -- distance check
       WF.dist_to_entry = geom.dist(cx,cy,cx_c,cy_c)
-      nearest_dist = math.min(nearest_dist, WF.dist_to_entry)
+      nearest_dist = math.min(nearest_dist, WF.dist_to_entry)]]
+
+      -- touching check
+      WF.dist_to_entry = geom.box_dist(
+        e_blob.cx1, e_blob.cy1, e_blob.cx2, e_blob.cy2,
+        WF.cx1, WF.cy1, WF.cx2, WF.cy2
+      )
     end
 
     each WF in area.walk_floors do
-      if WF.dist_to_entry == nearest_dist then
+      if WF.dist_to_entry == 0 then
         return WF
       end
     end
+
+    error("No entry walk floor found!!! Life is meaningless meow\n" ..
+    "Everything is terrible and food doesn't taste the same " ..
+    "and the bottle is running low on pills")
   end
 
 
@@ -2661,12 +2673,16 @@ function Cave_decide_properties(R, area)
   area.step_mode = "walkway"
 
   -- MSSP: Steppy caves are back, baby!
-  if rand.odds(style_sel("steepness", 0, 25, 50, 75)) then
+  if rand.odds(style_sel("steepness", 0, 25, 50, 75)) or (PARAM.steppy_caves and PARAM.steppy_caves == "always") then
     if rand.odds(50) then
       area.step_mode = "up"
     else
       area.step_mode = "down"
     end
+  end
+
+  if PARAM.steppy_caves and PARAM.steppy_caves == "no" then
+    area.step_mode = "walkway"
   end
 
   -- liquid mode --
@@ -4722,8 +4738,8 @@ function Cave_prepare_scenic_vista(area)
   if OB_CONFIG.zdoom_vista == "enable" then
     vista_list =
     {
-      bottomless_drop = 6
-      cliff_gradient = 5
+      bottomless_drop = 3
+      cliff_gradient = 7
     }
   end
 
@@ -4731,7 +4747,7 @@ function Cave_prepare_scenic_vista(area)
     vista_list =
     {
       bottomless_drop = 2
-      cliff_gradient = 2
+      cliff_gradient = 8
     }
   end
 
@@ -4742,7 +4758,9 @@ function Cave_prepare_scenic_vista(area)
     vista_list.ocean = 4
   end
 
-  vista_list.fake_room = 4
+  if not room.is_exit then
+    vista_list.fake_room = 4
+  end
 
   vista_type = rand.key_by_probs(vista_list)
 
@@ -4781,9 +4799,9 @@ function Cave_prepare_scenic_vista(area)
 
   local fence_tab =
   {
-    fence = 2
-    railing = 4
-    wall = 2
+    fence = 3
+    railing = 5.5
+    wall = 1.5
   }
 
   local edge_tab =
@@ -4961,7 +4979,7 @@ function Cave_build_a_scenic_vista(area)
     --
 
     local function can_rail()
-      local rail_top = area.floor_h + room.scenic_fence.rail_h
+      local rail_top = area.floor_h + room.scenic_fences.rail_h
       if rail_top <= area.zone.sky_h then return true end
 
       return false

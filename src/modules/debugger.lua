@@ -86,6 +86,14 @@ function DEBUG_CONTROL.setup(self)
   end
 end
 
+function DEBUG_CONTROL.all_done()
+  if PARAM.attach_debug_info and PARAM.attach_debug_info == "yes" then
+    local log_text = {}
+
+    gui.wad_add_text_lump("OBLOGS", log_text)
+  end
+end
+
 ----------------------------------------------------------------
 
 OB_MODULES["debugger"] =
@@ -170,7 +178,74 @@ OB_MODULES["debugger"] =
       tooltip = "Displays usage statistics for shape grammar rules."
       default = "no"
       priority=95
+    }
+    
+    save_svg =
+    {
+      name = "save_svg"
+      label = _("Save Map Previews")
+      choices=DEBUG_CONTROL.YES_NO
+      tooltip = "Saves SVG format images of generated map thumbnails."
+      default = "no"
+      priority=94
       gap = 1
     }
+
+    extra_games =
+    {
+      name = "extra_games"
+      label = _("Extra Games")
+      choices = DEBUG_CONTROL.YES_NO
+      tooltip = "Enables games other than Doom 2 in Game Settings list."
+      default = "no"
+      priority = 60
+      gap = 1
+    }
+
+    peered_exits =
+    {
+      name = "peered_exits"
+      label = _("Peered Starts/Exits")
+      choices = DEBUG_CONTROL.YES_NO
+      default = "no"
+      priority = 52
+    }
+
+    steppy_caves =
+    {
+      name = "steppy_caves"
+      label = _("Steppy Caves")
+      choices =
+      {
+        "always", _("Always"),
+        "yes", _("Yes"),
+        "no", _("No"),
+      }
+      tooltip = "Disables or enables caves with height variations."
+      default = "yes"
+      priority = 51
+      gap = 1
+    }
+
+    start_room_size =
+    {
+      name = "start_room_size"
+      label = _ ("Start Size Variance")
+      choices = DEBUG_CONTROL.YES_NO
+      tooltip = "Affects whether Room Size Variance also influences start rooms."
+      default = "no"
+      priority = 50
+    }
+
+--[[
+    attach_debug_info =
+    {
+      name = "attach_debug_info"
+      label = _("Attach DEBUG Info")
+      choices = DEBUG_CONTROL.YES_NO
+      tooltip = "Attaches certain debug info into an OBLOGS text lump in the generated WAD."
+      priority = 91
+    }
+]]
   }
 }

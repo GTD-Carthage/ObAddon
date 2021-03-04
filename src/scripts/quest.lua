@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2517,6 +2517,71 @@ function Quest_nice_items()
   end
 
 
+  local function assign_secondary_importants()
+    if not LEVEL.secondary_importants then return end
+    if table.empty(LEVEL.secondary_importants) then return end
+
+    local simp_tab = LEVEL.secondary_importants
+    rand.shuffle(simp_tab)
+
+    local room_tab = {}
+    local chosen_room
+
+    -- secondary importants table attributes:
+
+    -- level_prob: probability for this SI to appear in map
+    -- min_count: minimum number the SI fab should appear in map
+    -- max_count: maximum number
+    -- not_start: if true, start rooms are excluded from room pick
+    -- not_exit: if true, exit rooms are excluded
+    -- min_prog: 0-1 value; how far along in the level should
+    --   SI fab start spawning
+    -- max_prog: 0-1 value; how far along in the level should
+    --   SI fab stop spawning
+
+    local function pick_room_for_si(info)
+      each R in LEVEL.rooms do
+        if R.closets and #R.closets > 2
+        and not R.secondary_important
+        and not R.is_hallway then
+          local do_it = false
+
+          if info.min_prog and info.max_prog then
+            if R.lev_along >= info.min_prog and
+            R.lev_along <= info.max_prog then
+              do_it = true
+            end
+          end
+
+          if (not_start and R.is_start) or
+          (not_exit and R.is_exit) then
+            do_it = false
+          end
+
+          if do_it then
+            table.insert(room_tab, R)
+          end
+        end
+      end
+
+      for count = info.min_count or 1, info.max_count do
+        if table.empty(room_tab) then continue end
+
+        chosen_room = rand.pick(room_tab)
+        chosen_room.secondary_important =
+        {
+          kind = info.kind
+        }
+
+      end
+    end
+
+    each SI in simp_tab do
+      if rand.odds(SI.level_prob) then pick_room_for_si(SI) end
+    end
+  end
+
+
   ---| Quest_nice_items |---
 
   max_level = 1 + LEVEL.ep_along * 9
@@ -2554,6 +2619,8 @@ function Quest_nice_items()
 
   -- mark all remaining unused leafs as STORAGE rooms
   find_storage_rooms()
+
+  assign_secondary_importants()
 end
 
 
@@ -2804,7 +2871,7 @@ function Quest_room_themes()
       assert(conn)
 
       -- IDEA : make this depend on combined size of both rooms
-      local keep_prob = 35
+      local keep_prob = 65
       if last_theme.keep_prob then keep_prob = last_theme.keep_prob end
 
       -- force theme change over zone boundaries or teleporters
@@ -2900,8 +2967,8 @@ function Quest_room_themes()
         theme = ob_resolve_theme_keyword(R.theme.theme_override)
       end
 
-      R.fence_type = rand.key_by_probs(GAME.THEMES[theme].fence_groups)
-      R.beam_type = rand.key_by_probs(GAME.THEMES[theme].beam_groups)
+      R.fence_group = rand.key_by_probs(GAME.THEMES[theme].fence_groups)
+      R.beam_group = rand.key_by_probs(GAME.THEMES[theme].beam_groups)
     end
   end
 
@@ -2923,6 +2990,12 @@ function Quest_room_themes()
       Z.steps_mat = THEME.steps_mat
 
       Z.post_type = rand.key_by_probs(THEME.fence_posts)
+
+      Z.scenic_fences = GAME.MATERIALS[rand.key_by_probs(THEME.scenic_fences)]
+    end
+
+    each R in LEVEL.rooms do
+      R.scenic_fences = R.zone.scenic_fences
     end
   end
 
@@ -3045,9 +3118,6 @@ function Quest_room_themes()
     if R.is_natural_park then
       R.main_tex = R.zone.nature_facade
     end
-
-    -- code for determining scenic fences is now here
-    R.scenic_fence = GAME.MATERIALS[rand.key_by_probs(GAME.THEMES[theme].scenic_fence)]
 
     -- create a skin (for prefabs)
     R.skin =

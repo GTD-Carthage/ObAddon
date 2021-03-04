@@ -3,7 +3,7 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2016 Andrew Apted
---  Copyright (C) 2011,2014 Chris Pisarczyk
+--  Copyright (C) 2011-2021 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -250,9 +250,13 @@ TNT.THEMES =
 
     fence_posts =
     {
-      Post_metal = 50
-      Post_gothic_1 = 50
-      Post_gothic_2 = 50
+      Post_metal = 25
+      Post_gothic_blue = 10
+      Post_gothic_green = 10
+      Post_gothic_red = 15
+      Post_gothic_blue_2 = 10
+      Post_gothic_green_2 = 10
+      Post_gothic_red_2 = 15
     }
 
 --Mostly based on what is seen in TNT.WAD MAP31
@@ -264,7 +268,7 @@ TNT.THEMES =
     }
 
 --Any rocky/stonelike/metal doors (IE METALDR) would do great for this theme -Chris
-    scenic_fence =
+    scenic_fences =
     {
       MIDBARS3 = 50
     }

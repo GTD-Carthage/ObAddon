@@ -1,3 +1,17 @@
+--------------------------------------------------------------------
+--  GZDoom Boss Generator
+--------------------------------------------------------------------
+--
+--  Copyright (C) 2019-2021 MsrShooterPerson
+--  Copyright (C) [Insert anyone else who worked on this] 2020-2021
+--
+--  This program is free software; you can redistribute it and/or
+--  modify it under the terms of the GNU General Public License
+--  as published by the Free Software Foundation; either version 2
+--  of the License, or (at your option) any later version.
+--
+--------------------------------------------------------------------
+
 BOSS_GEN_TUNE = {}
 
 BOSS_GEN_TUNE.BOSS_DIFF_CHOICES =
@@ -92,6 +106,15 @@ BOSS_GEN_TUNE.BOSS_LIMITS =
   "hardlimit",  _("Hard Limit"),
   "softlimit",     _("Soft Limit"),
   "nolimit", _("No Limit"),
+}
+
+BOSS_GEN_TUNE.MULT =
+{
+  "1", _("x1"),
+  "2", _("x2"),
+  "3", _("x3 (default)"),
+  "4", _("x4"),
+  "5", _("x5"),
 }
 
 BOSS_GEN_TUNE.TEMPLATES =
@@ -936,41 +959,6 @@ class bossabilitygiver_pyro : bossabilitygiver { }
 class bossabilitygiver_bounce : bossabilitygiver { }
 class bossabilitygiver_homing : bossabilitygiver { }
 ]]
-  BAR = [[if(bossFound)
-        {
-        ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
-        bossController mo;
-        while (mo = bossController(BossFinder.Next()))
-        {
-            if(mo.boss && mo.bossactive && !mo.bossdead)
-            {
-            int bars = (mo.boss.health * 20) / mo.boss.starthealth;
-            string barsx;
-            for(int i = 0; i<bars; i++)
-            {
-                barsx.AppendFormat("I");
-            }
-            string name = Stringtable.Localize(string.format("%%s%%i","$BOSS_NAME",currentboss));
-            string bosshp = string.format("%%s %%s %%s", name, "\n", barsx);
-            if(name.length()>32)
-            {
-                if(name.length()>41)
-                {
-                    screen.DrawText(SmallFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
-                }
-                else
-                {
-                    screen.DrawText(BigFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
-                }
-            }
-            else
-            {
-                screen.DrawText(BigFont, Font.CR_RED, 32, -32, bosshp, DTA_Clean, true);
-            }
-            }
-        }
-        }
-]]
   LVL = [[if(level.LevelNum == NUM)
         {
             bossEnabled = true;
@@ -1269,6 +1257,82 @@ BOSS_GEN_TUNE.TRAITS =
   }
 }
 
+function BOSS_GEN_TUNE.game_specific_hpbar()
+    if OB_CONFIG.game == "heretic" then
+     BOSS_GEN_TUNE.TEMPLATES.BAR = [[if(bossFound)
+        {
+        ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
+        bossController mo;
+        while (mo = bossController(BossFinder.Next()))
+        {
+            if(mo.boss && mo.bossactive && !mo.bossdead)
+            {
+            int bars = (mo.boss.health * 20) / mo.boss.starthealth;
+            string barsx;
+            for(int i = 0; i<bars; i++)
+            {
+                barsx.AppendFormat("1");
+            }
+            string name = Stringtable.Localize(string.format("%%s%%i","$BOSS_NAME",currentboss));
+            string bosshp = string.format("%%s %%s %%s", name, "\n", barsx);
+            if(name.length()>32)
+            {
+                if(name.length()>41)
+                {
+                    screen.DrawText(SmallFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
+                }
+                else
+                {
+                    screen.DrawText(BigFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
+                }
+            }
+            else
+            {
+                screen.DrawText(BigFont, Font.CR_RED, 32, -32, bosshp, DTA_Clean, true);
+            }
+            }
+        }
+        }
+]]
+    else
+     BOSS_GEN_TUNE.TEMPLATES.BAR = [[if(bossFound)
+        {
+        ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
+        bossController mo;
+        while (mo = bossController(BossFinder.Next()))
+        {
+            if(mo.boss && mo.bossactive && !mo.bossdead)
+            {
+            int bars = (mo.boss.health * 20) / mo.boss.starthealth;
+            string barsx;
+            for(int i = 0; i<bars; i++)
+            {
+                barsx.AppendFormat("I");
+            }
+            string name = Stringtable.Localize(string.format("%%s%%i","$BOSS_NAME",currentboss));
+            string bosshp = string.format("%%s %%s %%s", name, "\n", barsx);
+            if(name.length()>32)
+            {
+                if(name.length()>41)
+                {
+                    screen.DrawText(SmallFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
+                }
+                else
+                {
+                    screen.DrawText(BigFont, Font.CR_RED, -92, -32, bosshp, DTA_Clean, true);
+                }
+            }
+            else
+            {
+                screen.DrawText(BigFont, Font.CR_RED, 32, -32, bosshp, DTA_Clean, true);
+            }
+            }
+        }
+        }
+]]
+    end
+end
+
 function BOSS_GEN_TUNE.grab_random_taunt()
   return rand.key_by_probs(BOSS_GEN_TUNE.TAUNTS)
 end
@@ -1454,6 +1518,7 @@ function BOSS_GEN_TUNE.all_done()
   scripty = string.gsub(scripty, "LEVELCODE", PARAM.lvlstr)
 
   if PARAM.boss_gen_hpbar == "yes" then
+    BOSS_GEN_TUNE.game_specific_hpbar()
     scripty = string.gsub(scripty, "BOSSHPBAR", BOSS_GEN_TUNE.TEMPLATES.BAR)
   else
     scripty = string.gsub(scripty, "BOSSHPBAR", "")
@@ -1596,6 +1661,8 @@ OB_MODULES["gzdoom_boss_gen"] =
 {
   label = _("[Exp]GZDoom Boss Generator")
 
+--  game = "doomish"
+
   side = "right"
   priority = 92
 
@@ -1737,6 +1804,26 @@ OB_MODULES["gzdoom_boss_gen"] =
       choices = BOSS_GEN_TUNE.BOSS_EXIT,
       default = "default",
       tooltip = "Changes exit type after boss has been destroyed."
+    }
+
+    boss_gen_ammo =
+    {
+      name = "boss_gen_ammo",
+      label = _("Ammo supplies mult"),
+      priority = 87,
+      choices = BOSS_GEN_TUNE.MULT,
+      default = "3",
+      tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier)."
+    }
+
+    boss_gen_heal =
+    {
+      name = "boss_gen_heal",
+      label = _("Healing supplies mult"),
+      priority = 86,
+      choices = BOSS_GEN_TUNE.MULT,
+      default = "3",
+      tooltip = "Changes multiplier of healing items on the boss arena."
     }
   }
 }

@@ -2,7 +2,7 @@
 --  MODULE: Modded Game extras module
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -109,6 +109,84 @@ MODDED_GAME_EXTRAS.D4T_THINGS =
     closet_prob = 8
     secret_prob = 60
   }
+
+  d4t_spectre_rune =
+  {
+    id = 13679, kind = "powerup", level = 2,
+    add_prob = 3, secret_prob = 6
+  }
+
+  d4t_prowler_rune =
+  {
+    id = 13680, kind = "powerup", level = 2,
+    add_prob = 3, secret_prob = 6
+  }
+
+  d4t_cacodemon_rune =
+  {
+    id = 13673, kind = "powerup", level = 3,
+    add_prob = 2, secret_prob = 4
+  }
+
+  d4t_fatso_rune =
+  {
+    id = 13675, kind = "powerup", level = 4,
+    add_prob = 2, secret_prob = 4
+  }
+
+  d4t_revenant_rune =
+  {
+    id = 13677, kind = "powerup", level = 4,
+    add_prob = 2, secret_prob = 4
+  }
+
+  d4t_arach_rune =
+  {
+    id = 13670, kind = "powerup", level = 5,
+    add_prob = 1.4, secret_prob = 2.8
+  }
+
+  d4t_hellknight_rune =
+  {
+    id = 13682, kind = "powerup", level = 6,
+    add_prob = 1.4, secret_prob = 2.8
+  }
+
+  d4t_painelemental_rune =
+  {
+    id = 13676, kind = "powerup", level = 7,
+    add_prob = 1.4, secret_prob = 2.8
+  }
+
+  d4t_baron_rune =
+  {
+    id = 13672, kind = "powerup", level = 7,
+    add_prob = 1, secret_prob = 2
+  }
+
+  d4t_harvester_rune =
+  {
+    id = 13681, kind = "powerup", level = 8,
+    add_prob = 1, secret_prob = 2
+  }
+
+  d4t_summoner_rune =
+  {
+    id = 13671, kind = "powerup", level = 8,
+    add_prob = 1, secret_prob = 2
+  }
+
+  d4t_cyberdemon_rune =
+  {
+    id = 13674, kind = "powerup", level = 9,
+    add_prob = 1, secret_prob = 2
+  }
+
+  d4t_mastermind_rune =
+  {
+    id = 13678, kind = "powerup", level = 9,
+    add_prob = 1, secret_prob = 2
+  }
 }
 
 MODDED_GAME_EXTRAS.D4T_MONS =
@@ -116,16 +194,16 @@ MODDED_GAME_EXTRAS.D4T_MONS =
   d4t_gore_nest =
   {
     id = 13511
-    r = 48
+    r = 112
     h = 5
     level = 1
-    boss_type = "minor"
+    boss_type = "tough"
     boss_prob = 50
     prob = 8
-    health = 500
+    health = 2500
     damage = 25
     attack = "hitscan"
-    density = 0.15
+    density = 0.1
     cage_factor = 0
     trap_factor = 0
   }
@@ -133,14 +211,14 @@ MODDED_GAME_EXTRAS.D4T_MONS =
   d4t_gore_nest_rank_n_file =
   {
     id = 13511
-    r = 48
+    r = 112
     h = 5
     level = 3
     prob = 17
-    health = 500
+    health = 2500
     damage = 25
     attack = "hitscan"
-    density = 0.15
+    density = 0.05
     cage_factor = 0
     trap_factor = 0
   }
@@ -881,23 +959,17 @@ end
 function MODDED_GAME_EXTRAS.add_qcde_lootboxes()
   table.name_up(MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS)
 
-  each item, property in MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS do
-    GAME.NICE_ITEMS[item] = property
-  end
+  GAME.NICE_ITEMS = table.deep_merge(GAME.NICE_ITEMS, MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS, 2)
 end
 
 
 
 function MODDED_GAME_EXTRAS.add_d4t_ents()
   table.name_up(MODDED_GAME_EXTRAS.D4T_THINGS)
+  table.name_up(MODDED_GAME_EXTRAS.D4T_MONS)
 
-  each item, property in MODDED_GAME_EXTRAS.D4T_THINGS do
-    GAME.NICE_ITEMS[item] = property
-  end
-
-  each mon, property in MODDED_GAME_EXTRAS.D4T_MONS do
-    GAME.MONSTERS[mon] = property
-  end
+  GAME.NICE_ITEMS = table.deep_merge(GAME.NICE_ITEMS, MODDED_GAME_EXTRAS.D4T_THINGS, 2)
+  GAME.MONSTERS = table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.D4T_MONS, 2)
 end
 
 
@@ -956,7 +1028,7 @@ OB_MODULES["modded_game_extras"] =
       name = "hd_cover_walls"
       label=_("HD Cover Walls")
       choices=MODDED_GAME_EXTRAS.ENABLE_DISABLE
-      tooltip = "Adds some Hideous Destructor-specific fabs such as walls with" ..
+      tooltip = "Adds some Hideous Destructor-specific fabs such as walls with " ..
       "cover to serve Hideous Destructor gameplay better. " ..
       "It is recommended to keep this disabled if you are not " ..
       "playing Hideous Destructor as these fabs will interfere with non-HD gameplay."

@@ -254,8 +254,7 @@ PREFABS.Item_secret_hellmachine1V1_closet =
 
   can_flip = true
 
-  uses_epic_textures = true
-
+  texture_pack = "armaetus"
 }
 
 --Stretch your arm under the hatch to open the machine V2
@@ -284,9 +283,7 @@ PREFABS.Item_secret_hellmachine1V2_closet =
 
   can_flip = true
 
-  uses_epic_textures = true
-
-
+  texture_pack = "armaetus"
 }
 
 --One of the cpu chip is defective, shoot it to open the core! V1
@@ -315,7 +312,7 @@ PREFABS.Item_secret_techmachine1V1_closet =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -345,7 +342,7 @@ PREFABS.Item_secret_techmachine1V2_closet =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -381,7 +378,7 @@ PREFABS.Item_dem_shrine_secretclosetC =
 
   z_fit = { 56,64 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   thing_2014 =
   {
@@ -433,7 +430,7 @@ PREFABS.Item_dem_campsiteC_secretcloset =
 
   z_fit = { 64,72 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -478,7 +475,7 @@ PREFABS.Item_dem_cavein_secretcloset =
     MIDVINE1=50, MIDVINE2=50
     }
 
-uses_epic_textures = true
+texture_pack = "armaetus"
 
   thing_2014 =
   {
@@ -561,7 +558,7 @@ PREFABS.Item_dem_cavestal_secretcloset =
 
   z_fit = { 88,96 }
 
-uses_epic_textures = true
+texture_pack = "armaetus"
 
   thing_2014 =
   {
@@ -602,7 +599,7 @@ PREFABS.Pic_dem_waterfallC1_secretcloset =
   x_fit = "stretch"
   z_fit = { 16,32 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   thing_2014 =
   {
@@ -651,7 +648,7 @@ PREFABS.Pic_dem_waterfallN1_secretcloset =
   x_fit = "stretch"
   z_fit = { 24,40 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   tex_MIDVINE1 = {
     MIDVINE1=50, MIDVINE2=50
@@ -675,6 +672,7 @@ PREFABS.Pic_dem_jumpy1_secretcloset =
   engine = "zdoom"
 
   theme = "!hell"
+  height = 192
 
   prob   = 100
 
@@ -693,12 +691,12 @@ PREFABS.Pic_dem_jumpy1_secretcloset =
   over = -16
 
   bound_z1 = 0
-  bound_z2 = 128
+  bound_z2 = 192
 
   x_fit = "stretch"
   z_fit = { 128,136 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   thing_2014 =
   {
@@ -712,4 +710,122 @@ PREFABS.Pic_dem_jumpy2_secretcloset =
 {
   template  = "Pic_dem_jumpy1_secretcloset"
   map    = "MAP23"
+
+  height = 256
+  
+  z_fit = { 88,96 }
+
+  bound_z2 = 256
+}
+
+---Garrett blood fountain with a secret---
+PREFABS.Item_dem_garrett_fountain1 =
+{
+  file = "item/dem_secret_closets.wad"
+  map  = "MAP24"
+
+  theme = "hell"
+  env  = "building"
+  prob = 30
+
+  key = "secret"
+
+  where  = "seeds"
+  seed_w = 2
+  seed_h = 1
+
+  deep = 48
+
+  height = 128
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+  x_fit = "frame"
+  y_fit  = "top"
+  z_fit  = "top"
+
+  can_flip = true
+}
+
+PREFABS.Item_dem_garrett_fountain2 =
+{
+  template  = "Item_dem_garrett_fountain1"
+  map    = "MAP25"
+}
+
+PREFABS.Item_dem_garrett_fountain3 =
+{
+  template  = "Item_dem_garrett_fountain1"
+  map    = "MAP26"
+}
+
+---Garrett overturned cross with a secret---
+PREFABS.Item_dem_garrett_cross =
+{
+  file   = "item/dem_secret_closets.wad"
+  map    = "MAP27"
+
+  theme  = "hell"
+  env      = "building"
+  prob   = 100
+
+  key = "secret"
+
+  where  = "seeds"
+  seed_w = 1
+  seed_h = 1
+
+  deep = 48
+
+  height = 128
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+
+  x_fit = "frame"
+  y_fit  = "top"
+  z_fit  = "top"
+
+  thing_2014 =
+  {
+    potion = 50
+    helmet = 50
+  }
+
+}
+
+---Sgt sharp alcoves with a secret---
+PREFABS.Item_dem_gtd_alcove_secret =
+{
+  file   = "item/dem_secret_closets.wad"
+  map    = "MAP28"
+
+  theme  = "hell"
+  env    = "building"
+  prob   = 100
+
+  key   = "secret"
+
+  where  = "seeds"
+  seed_w = 2
+  seed_h = 1
+
+  deep = 48
+
+  height = 128
+
+  bound_z1 = 0
+  bound_z2 = 128
+
+  x_fit = "frame"
+  y_fit  = "top"
+  z_fit  = "top"
+
+  thing_2014 =
+  {
+    potion = 50
+    helmet = 50
+  }
 }

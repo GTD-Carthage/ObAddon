@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -82,7 +82,7 @@
 
     aversions : table[name] -> factor
 
-    scenic_fence : table[name] -- specific fence material if this room looks at a vista
+    scenic_fences : table[name] -- specific fence material if this room looks at a vista
 --]]
 
 
@@ -179,7 +179,7 @@ function ROOM_CLASS.new()
 
     hazard_health = 0
 
-    scenic_fence = {}
+    scenic_fences = {}
   }
 
   table.set_class(R, ROOM_CLASS)
@@ -971,11 +971,25 @@ function Room_detect_porches(R)
   local function set_as_porch(A)
     A.is_porch = true
 
+    if A.peer then -- apply porchness to symmetry too, of course
+      A.peer.is_porch = true
+    end
+
     -- Note : keeping 'is_outdoor' on the area
 
     -- MSSP: Overriden because junction code seems to
     -- skip out on room->scenics interactions...
     A.is_outdoor = false
+
+    if not A.room.porch_fence_type then
+      A.room.porch_fence_type = rand.key_by_probs(
+        {
+          fence = 5
+          railing = 3
+          wall = 5
+        }
+      )
+    end
   end
 
 
@@ -1480,11 +1494,18 @@ function Room_border_up()
 
 
   local function can_fence(A1, A2)
-    if A1.mode != "floor" then
+    if A1.chunk and A1.chunk.kind == "stair"
+    and (A1.chunk.dest_area == A2 or A1.chunk.from_area == A2) then
       return false
     end
 
-    if A2.mode != "floor" then
+    if A2.chunk and A2.chunk.kind == "stair"
+    and (A2.chunk.dest_area == A1 or A2.chunk.from_area == A1) then
+      return false
+    end
+
+    if A1.mode == "liquid" or A2.mode == "liquid"
+    or A1.mode == "cage" or A2.mode == "cage" then
       return false
     end
 
@@ -1772,9 +1793,7 @@ function Room_border_up()
         if (A1.floor_h == A2.floor_h)
         or A1.mode == "liquid" or A2.mode == "liquid" then
           if can_beam(A1, A2, junc) then
-            if A1.room.is_outdoor then
-              Junction_make_beams(junc)
-            elseif not A1.room.is_outdoor and rand.odds(style_sel("beams",0,25,50,75)) then
+            if A1.room.is_outdoor and rand.odds(style_sel("beams",0,25,50,75)) then
               Junction_make_beams(junc)
             end
           end
@@ -1786,13 +1805,13 @@ function Room_border_up()
               Junction_make_wall(junc)
             end
           elseif not A1.is_outdoor then
-            if rand.odds(50) then
-              if can_porch_wall(A1, A2) then
+            if can_porch_wall(A1, A2) then
+              if A1.room.porch_fence_type == "fence" then
                 Junction_make_fence(junc)
-              end
-            else
-              Room_make_windows(A1, A2)
-              if can_porch_wall(A1, A2) then
+              elseif A1.room.porch_fence_type == "railing" then
+                Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+              elseif A1.room.porch_fence_type == "wall" then
+                Room_make_windows(A1, A2)
                 Junction_make_wall(junc)
               end
             end
@@ -1808,12 +1827,12 @@ function Room_border_up()
     if A1.is_porch_neighbor or A2.is_porch_neighbor then
       if ((A1.mode == "liquid" and A2.mode == "floor")
       or (A1.mode == "floor" and A2.mode == "liquid"))
-      and A1.room == A2.room then
+      and A1.room == A2.room 
+      and rand.odds(style_sel("beams",0,25,50,75)) then
         Junction_make_beams(junc)
       end
 
-      if ((A1.mode == "liquid" and A2.mode == "cage")
-      or (A1.mode == "cage" and A1.mode == "liquid"))
+      if A1.mode == "cage" or A2.mode == "cage"
       and A1.room == A2.room then
         Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
       end
@@ -2083,6 +2102,25 @@ function Room_choose_size(R, not_big)
   end
 
   local sum = LEVEL.map_W * 2/3 + rand.range( 10,50 )
+
+  -- some extra size experiments - should be revised for
+  -- more direct control. In fact, maybe this whole size
+  -- decision code could use a clean-up
+  if (R.is_start and PARAM.start_room_size
+  and PARAM.start_room_size == "yes")
+  or not R.is_secret then
+    if LEVEL.size_multiplier then
+      sum = sum * LEVEL.size_multiplier
+    end
+
+    if LEVEL.size_consistency == "strict" then
+      if not LEVEL.strict_size then
+        LEVEL.strict_size = sum
+      end
+      sum = LEVEL.strict_size
+    end
+  end
+
   R.floor_limit = rand.key_by_probs(
     {
       [1]=3
@@ -2156,22 +2194,27 @@ function Room_choose_size(R, not_big)
 
   --Make parks bigger
   elseif R.is_park then
-    R. size_limit = sum * rand.range( 2,3 )
-    R.floor_limit = rand.key_by_probs(
+    R. size_limit = sum * rand.key_by_probs(
       {
-        [5]=1
+        [2]=2
+        [3]=2
+        [4]=1.5
         [6]=1
-        [7]=1
-        [8]=2
-        [9]=2
-        [10]=3
-        [11]=3
-        [13]=3
-        [14]=2
-        [15]=1
+        [8]=1
       }
     )
 
+  end
+
+  if (R.is_start and PARAM.start_room_size
+  and PARAM.start_room_size == "yes")
+  or not R.is_secret then
+    if LEVEL.area_multiplier then
+      R.floor_limit = int(R.floor_limit * LEVEL.area_multiplier)
+    end
+    if LEVEL.has_absurd_new_area_rules then
+      R.floor_limit = R.floor_limit * 4
+    end
   end
 
   -- Special instructions for procedural gotcha rooms
@@ -3035,7 +3078,7 @@ function Room_floor_ceil_heights()
 
     -- set ceiling for cage (basically if indoors)
     if N.ceil_h then
-      A.ceil_h = math.max(A.floor_h + A.room.scenic_fence.rail_h, A.floor_h + 96, N.ceil_h)
+      A.ceil_h = math.max(A.floor_h + A.room.scenic_fences.rail_h, A.floor_h + 96, N.ceil_h)
     end
 
     A.floor_mat = assert(A.zone.cage_mat)
@@ -3064,7 +3107,7 @@ function Room_floor_ceil_heights()
         A.floor_h = N.floor_h
 
         if not R.is_outdoor then
-          A.ceil_h = math.max(A.floor_h + A.room.scenic_fence.rail_h, A.floor_h + 96)
+          A.ceil_h = math.max(A.floor_h + A.room.scenic_fences.rail_h, A.floor_h + 96)
         end
       end
     end
@@ -3210,6 +3253,11 @@ function Room_floor_ceil_heights()
     assert(R.max_floor_h >= R.min_floor_h)
     if with_ceil and not R.is_hallway then
       assert( R.max_ceil_h >= R.min_ceil_h )
+    end
+
+    -- hack
+    if R.is_park and R.park_type == "plains" then
+      R.max_floor_h = R.entry_h
     end
   end
 
@@ -3401,7 +3449,7 @@ function Room_floor_ceil_heights()
       A.ceil_mat = N.ceil_mat
       A.is_porch_neighbor = true
 
-      if A.room.is_outdoor and A.mode == "cage" then
+      if A.mode == "cage" then
         A.ceil_h = N.ceil_h
         A.floor_h = (N.floor_h or N.chunk.floor_h) + 24
 
@@ -3411,8 +3459,13 @@ function Room_floor_ceil_heights()
           A.floor_h = A.ceil_h - 96
         end
         A.cage_mode = "fancy"
-      else
-        A.ceil_h = N.ceil_h
+      end
+
+      if A.peer then
+        A.peer.is_outdoor = false
+        A.peer.is_porch_neighbor = true
+        A.peer.ceil_mat = A.ceil_mat
+        A.peer.ceil_h = A.ceil_h
       end
 
     end
@@ -3559,15 +3612,11 @@ end
     -- corner style decision -MSSP
     if not R.is_outdoor then
       if PARAM.corner_style == "random" then
-        if rand.odds(50) then
-          R.corner_style = "curved"
-        else
-          R.corner_style = "sharp"
-        end
-      elseif PARAM.corner_style == "sharp" then
-        R.corner_style = "sharp"
-      elseif PARAM.corner_style == "curved" then
-        R.corner_style = "curved"
+        R.corner_style = rand.pick({"sharp","curved"})
+      elseif PARAM.corner_style == "themed" then
+        R.corner_style = rand.key_by_probs(THEME.sink_style)
+      else
+        R.corner_style = PARAM.corner_style
       end
     elseif R.is_outdoor then
       R.corner_style = "sharp"
@@ -3889,9 +3938,13 @@ function Room_cleanup_stairs_to_nowhere(R)
           local diff = lowest_floor - A.floor_h
           A.floor_h = lowest_floor + 32
           A.ceil_h = A.ceil_h + diff
-        elseif A.ceil_h > tallest_ceiling and tallest_ceiling > -EXTREME_H then
+        end
+        if A.ceil_h > tallest_ceiling and tallest_ceiling > -EXTREME_H then
           local diff = lowest_floor + A.ceil_h
           A.ceil_h = tallest_ceiling
+          if diff < 96 then
+            A.ceil_h = lowest_floor + 96
+          end
         end
 
       end
@@ -4016,9 +4069,9 @@ function Room_cleanup_stairs_to_nowhere(R)
 
   select_porch_floor_mats(R)
 
-  if not R.is_park then
+  --[[if not R.is_park then
     fixup_cages()
-  end
+  end]]
 
 end
 

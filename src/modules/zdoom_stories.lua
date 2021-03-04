@@ -583,8 +583,9 @@ ZDOOM_STORIES.STORIES =
       [[You push yourself through the corridors of the overrun area
       which bares the marks of battle. You come across various consoles
       reading "ERROR" and "AAG targeting comprimised" scrolling the screens.
-      You hear the familiar boom of anti-aircraft guns, which is unusual.
-      Something's wrong.]],
+      You hear the boom of anti-aircraft guns - unusual, as no UAC operators
+      are in the area. Something is wrong. Something else is in control of the
+      system.]],
     }
     conclusions =
     {
@@ -1306,9 +1307,8 @@ ZDOOM_STORIES.STORIES =
       into the mountain. The defenders rain upon the area an endless
       barrage of fire and plasma. Somewhere deep behind the
       fortifications must be a tunnel leading into the heart of the
-      fortress. Given enough time, you could locate and breach it.
-      _SPACE
-      Time is precisely what you don't have. You turn around, looking
+      fortress. Given enough time, you could locate and breach it -
+      and time is precisely what you don't have. You turn around, looking
       for something - anything - you could use, and your gaze falls
       upon the experimental fusion cannon, towering above the area.
       The realization comes immediately.
@@ -1638,7 +1638,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
     it, and arrive just in time to join a group of marines, fighting
     off a small horde of hellspawn.
     _SPACE
-    With your timely aid, the battle ends quickly and gruesomely.
+    With your timely aid, the battle ends almost instantaneously.
     The survivors, relieved and encouraged by your presence, thank
     you, by giving you their military map, clear and detailed,
     with every bunker, barricade and stockpile clearly marked.
@@ -1646,7 +1646,7 @@ ZDOOM_STORIES.SECRET_TEXTS =
     passageway, right ahead...]],
 
     [[Unexpectedly, you find a survivor hiding under the rubble.
-    Surprisingly, his speech is coherent, and his thinking is clear.
+    Surprisingly, his speech is coherent and his thinking is clear.
     What's more, he is armed with a machine pistol he scavenged off
     a dead troop. He confirms he had been hiding and fighting for
     weeks and has established a set of hideouts and observation posts.
@@ -2452,6 +2452,12 @@ ZDOOM_STORIES.ENTITIES =
     CEREBRO=5, -- X-Men
     COLOSSUS=5,
     ZERO=5,
+    OMICRON=5,
+    LAMBDA=5,
+    TAU=5,
+    UPSILON=5,
+    THETA=5,
+    IOTA=5,
   }
 }
 
@@ -2527,6 +2533,17 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Is this really what it has come to?]],
   [[That's right, abandon your fellow marines in a time of need...]],
   [[RAND_CONTRIBUTOR has decided you are unworthy of your skills here.]],
+  [[Is that the way it's gonna be? Fine, now piss off.]],
+  [[We don't have time for this quitting nonsense.]],
+  [[Didn't think you were the type to pussy out of Doom..]],
+  [[I should have known better. There are better and more capable players that don't quit early..]],
+  [[Ego bruised from losing? Too bad.]],
+  [[There's too much bullshit and we don't need you to add to it.]],
+  [[Go sit on a shotgun barrel and pull the trigger.]],
+  [[By the time you read this message, you already lost.]],
+  [[We insist you stay and play just a little bit longer.]],
+  [[Quitters are not winners.]],
+
 
   -- hardcore philosophy
   [[Are you quitting because you realized no matter how much hellspawn you mow down, Oblige will just give you more?]],
@@ -2578,4 +2595,8 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Despite having the same surname, Adrian and John Carmack are not related.]],
   [[It is predicted in about 30 to 50 million years, Phobos will crash into Mars due to tidal deceleration. At that point, Mars will probably have many smaller moons or a ring.]],
   [[Phobos is about 6,000 km (or about 3,700mi) from Mars's surface, compared to our moon's 384,402 km (or 238,856 mi)]],
+
+  [[This is an actual line of code in Oblige:\n `if not is_big(mon) then has_small = true end`]],
+
+  [[Some people want to watch the world segfault. -dashodanger, 2021]]
 }

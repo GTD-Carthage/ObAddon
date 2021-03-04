@@ -8,7 +8,7 @@ PREFABS.Decor_sedan_EPIC =
 
   can_be_on_roads = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   replaces = "Decor_sedan"
 
@@ -20,8 +20,6 @@ PREFABS.Decor_sedan_EPIC =
 
   bound_z1 = 0
   bound_z2 = 128
-
-  sink_mode = "never"
 }
 
 PREFABS.Decor_sedan_blue_EPIC =
@@ -53,7 +51,7 @@ PREFABS.Decor_minitruck_EPIC =
 
   can_be_on_roads = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   replaces = "Decor_minitruck"
 
@@ -68,15 +66,13 @@ PREFABS.Decor_minitruck_EPIC =
 
   bound_z1 = 0
   bound_z2 = 128
-
-  sink_mode = "never"
 }
 
 PREFABS.Decor_minitruck_beige_EPIC =
 {
   template = "Decor_minitruck_EPIC"
 
-  replaces = "Decor_minitruck"
+  replaces = "Decor_minitruck_beige"
 
   flat_FLAT23 = "CRATOP2"
 

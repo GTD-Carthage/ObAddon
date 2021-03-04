@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker // ObAddon
 --
---  Copyright (C) 2018-2020 MsrSgtShooterPerson
+--  Copyright (C) 2018-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@ GROUPED_WALL_TONE_DOWN_EXP = 2.5
 
 -- the total perimeter of wall-ish junctions required in the map
 -- before Autodetail for ungrouped walls kicks in
-LEVEL_PERIMETER_COUNT_KICKIN = 1000
+LEVEL_PERIMETER_COUNT_KICKIN = 1800
 
 -- added exponent for ungrouped walls
 -- higher numbers mean plain walls are more likely
@@ -60,7 +60,7 @@ end
 
 
 function Autodetail_plain_walls()
-  LEVEL.autodetail_plain_walls_factor = 1
+  LEVEL.autodetail_plain_walls_factor = 0
 
   if PARAM.autodetail == "off" then return end
 
@@ -80,7 +80,21 @@ function Autodetail_plain_walls()
     tone_down_factor = tone_down_factor * UNGROUPED_WALL_TONE_DOWN_EXP
   end
 
-  LEVEL.autodetail_plain_walls_factor = math.clamp(0, tone_down_factor, 100)
+  LEVEL.autodetail_plain_walls_factor = math.clamp(0, tone_down_factor * 1.25, 100)
+
+  each _,junc in LEVEL.junctions do
+    if junc.E1 and junc.E1.kind == "wall" then
+      if rand.odds(LEVEL.autodetail_plain_walls_factor) then
+        junc.E1.plain = true
+      end
+    end
+
+    if junc.E2 and junc.E2.kind == "wall" then
+      if rand.odds(LEVEL.autodetail_plain_walls_factor) then
+        junc.E2.plain = true
+      end
+    end
+  end
 end
 
 

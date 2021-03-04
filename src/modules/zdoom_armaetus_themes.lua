@@ -42,6 +42,28 @@ ARMAETUS_ROOM_THEMES =
     }
   }
 
+  any_pipeline_Hallway =
+  {
+    env   = "hallway"
+    group = "pipeline"
+    prob  = 1
+
+    walls =
+    {
+      GRAY5 = 1
+    }
+
+    floors =
+    {
+      FLAT1 = 1
+    }
+
+    ceilings =
+    {
+      FLAT1 = 1
+    }
+  }
+
   any_hellcata_Hallway =
   {
     env   = "hallway"
@@ -180,6 +202,12 @@ ARMAETUS_ROOM_THEMES =
       METAL10 = 25
       METAL11 = 25
 
+      SHAWGRY4 = 25
+      SHAWN01C = 25
+      SHAWN01E = 25
+      SHAWN01F = 25
+      SHAWSH04 = 25
+
       SHAWN4 = 33
       SHAWN5 = 33
       HEX01 = 33
@@ -195,7 +223,7 @@ ARMAETUS_ROOM_THEMES =
       TEKGRY01 = 30
       TEKSHAW = 30
 
-      TKWALL2 = 15
+      TEKWALL2 = 15
       TEKWALL7 = 15
       TEKWALL8 = 15
       TEKWALL9 = 15
@@ -263,7 +291,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_Computers =
   {
-    prob = 50
+    prob = 25
     env = "building"
 
     walls =
@@ -303,7 +331,7 @@ ARMAETUS_ROOM_THEMES =
   -- Multi colors here!
   tech_ComputersMulti =
   {
-    prob = 25
+    prob = 15
     env = "building"
 
     walls =
@@ -352,7 +380,7 @@ ARMAETUS_ROOM_THEMES =
   -- single color comp rooms
   tech_ComputersRed =
   {
-    prob = 7
+    prob = 4
     env = "building"
 
     walls =
@@ -408,7 +436,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersBlue =
   {
-    prob = 7
+    prob = 4
     env = "building"
 
     walls =
@@ -468,7 +496,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersGreen =
   {
-    prob = 7
+    prob = 4
     env = "building"
 
     walls =
@@ -518,7 +546,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersYellowish =
   {
-    prob = 7
+    prob = 4
     env = "building"
 
     walls =
@@ -570,7 +598,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersParple =
   {
-    prob = 7
+    prob = 4
     env = "building"
 
     walls =
@@ -623,7 +651,7 @@ ARMAETUS_ROOM_THEMES =
   tech_Cement =
   {
     env = "building"
-    prob = 100
+    prob = 50
 
     walls =
     {
@@ -663,7 +691,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_Shiny =
   {
-    prob = 75
+    prob = 100
     env = "building"
 
     walls =
@@ -791,7 +819,7 @@ ARMAETUS_ROOM_THEMES =
   tech_VeryGray =
   {
     env = "building"
-    prob = 85
+    prob = 100
 
     walls =
     {
@@ -1127,6 +1155,11 @@ ARMAETUS_ROOM_THEMES =
       SKINMET7 = 10
       SKTEK01 = 15
       SKTEK02 = 15
+
+      CREYEWLL = 30
+      CRFSHWLL = 30
+      CRGRSWLL = 30
+      CRHRTWLL = 30
     }
 
     floors =
@@ -1139,6 +1172,11 @@ ARMAETUS_ROOM_THEMES =
       FLOOR46D = 30
       FLOOR46E = 30
       G13 = 20
+
+      CREYEWLL = 10
+      CRFSHWLL = 10
+      CRGRSWLL = 10
+      CRHRTWLL = 10
     }
 
     ceilings =
@@ -1149,6 +1187,11 @@ ARMAETUS_ROOM_THEMES =
       G03 = 30
       FLOOR7_2 = 15
       FLOOR7_3 = 15
+
+      CREYEWLL = 7
+      CRFSHWLL = 7
+      CRGRSWLL = 7
+      CRHRTWLL = 7
     }
   }
 
@@ -1339,7 +1382,8 @@ ARMAETUS_ROOM_THEMES =
     floors =
     {
       FLOOR0_1 = 5
-      FLOOR4_3 = 5
+      FLOOR0_3 = 5
+      FLOOR0_5 = 5
       FLOOR4_1 = 5
       FLOOR4_5 = 5
       FLOOR4_6 = 5
@@ -1706,13 +1750,12 @@ ARMAETUS_ROOM_THEMES =
 
     ceilings =
     {
-    CEIL1_1 = 70
-    FLAT5_2 = 50
-    GSTN01  = 30
-    GSTN02  = 30
-    SLIME14 = 20
-    SLIME15 = 20
-
+      CEIL1_1 = 70
+      FLAT5_2 = 50
+      GSTN01  = 30
+      GSTN02  = 30
+      SLIME14 = 20
+      SLIME15 = 20
     }
   }
 
@@ -1724,17 +1767,33 @@ ARMAETUS_ROOM_THEMES =
 
     walls =
     {
-      CEM01 = 50
-      CEM02 = 50
-      CEM06 = 50
-      CEM07 = 50
-      CEM09 = 50
-      CEM10 = 100
-      CEM11 = 100
-      STON7 = 100
-      STONE10 = 100
-      STONE8 = 100
-      STONE9 = 75
+      CEM01 = 5
+      CEM02 = 5
+      CEM06 = 5
+      CEM07 = 5
+      CEM09 = 5
+      CEM10 = 10
+      CEM11 = 10
+      STON7 = 10
+      STONE10 = 10
+      STONE8 = 10
+      STONE9 = 7.5
+
+      BRONZEG1 = 5
+      BRONZEG2 = 5
+      BRONZEG3 = 5
+      BROWN2 = 5
+      BROWN3 = 5
+
+      GRAY6 = 5
+      GRAY8 = 5
+      GRAY9 = 5
+      SHAWN01C = 5
+      SHAWN01D = 5
+      SHAWN01E = 5
+      SHAWN01F = 5
+      SHAWN4 = 2.5
+      SHAWN5 = 5
     }
 
     floors =
@@ -2062,6 +2121,15 @@ ARMAETUS_LIQUIDS =
     gwater  = 25
     ice     = 40
     ice2    = 40
+  }
+
+  exclusions =
+  {
+    desert =
+    {
+      "ice1",
+      "ice2"
+    }
   }
 }
 
@@ -3051,6 +3119,7 @@ ARMAETUS_THEMES =
       metro = 25
       ducts = 50
       conveyor = 50
+      pipeline = 50
     }
 
     facades =
@@ -3127,6 +3196,10 @@ ARMAETUS_THEMES =
       gtd_wall_hydroponics = 15
       gtd_computers_shawn = 15
       gtd_computers_compsta = 15
+      gtd_wall_teklitecomp_red = 7
+      gtd_wall_teklitecomp_orange = 7
+      gtd_wall_teklitecomp_blue = 7
+      gtd_wall_grated_machines_epic = 20
     }
 
     window_groups =
@@ -3136,6 +3209,9 @@ ARMAETUS_THEMES =
       gtd_window_bulletproof_glass_green = 15
       gtd_window_bulletproof_glass_orange = 15
       gtd_window_tall_and_glassy = 10
+      gtd_window_goffik = 2.5
+      gtd_window_goffik_gold = 2.5
+      gtd_window_octo_glass = 30
     }
 
     street_sinks =
@@ -3193,7 +3269,7 @@ ARMAETUS_THEMES =
       ceiling_sink_GOTH21Y = 5
       ceiling_sink_GOTH21G = 5
       ceiling_sink_GOTH21B = 5
-      ceiling_sink_GOTH21P = 5
+      -- ceiling_sink_GOTH21P = 5
     }
 
     floor_sinks =
@@ -3207,7 +3283,7 @@ ARMAETUS_THEMES =
       floor_c43_red = 10
       floor_c43_yellow = 10
       floor_c43_green = 10
-      floor_c43_purple = 2
+      -- floor_c43_purple = 2
     }
 
     scenic_fences =
@@ -3237,6 +3313,8 @@ ARMAETUS_THEMES =
       Skybox_craneo_fishing_village_EPIC = 25
       Skybox_garrett_winterfall_EPIC = 12
       Skybox_craneo_space_shuttle_EPIC = 50
+      Skybox_city_bridge_EPIC = 35
+      Skybox_urban_cyber_EPIC = 35
     }
   }
 
@@ -3358,16 +3436,23 @@ ARMAETUS_THEMES =
       gtd_computers_compsta = 2
       gtd_wall_hell_bottom_glass = 15
       gtd_wall_arcade = 15
+      gtd_wall_teklitecomp_red = 1
+      gtd_wall_teklitecomp_orange = 1
+      gtd_wall_teklitecomp_blue = 1
+      gtd_wall_grated_machines_epic = 4
     }
 
     window_groups =
     {
       gtd_window_gothic_epic = 30
-      gtd_window_chainlinks = 50
+      gtd_window_chainlinks = 40
       gtd_window_bulletproof_glass = 10
       gtd_window_bulletproof_glass_green = 10
       gtd_window_bulletproof_glass_orange = 10
       gtd_window_tall_and_glassy = 60
+      gtd_window_goffik = 5
+      gtd_window_goffik_gold = 5
+      gtd_window_octo_glass = 20
     }
 
     street_sinks =
@@ -3476,6 +3561,9 @@ ARMAETUS_THEMES =
       Skybox_garrett_winterfall_EPIC = 25
       Skybox_craneo_egypt_EPIC = 35
       Skybox_craneo_space_shuttle_EPIC = 15
+      Skybox_city_bridge_EPIC = 50
+      Skybox_g99_hell_tower_EPIC = 15
+      Skybox_urban_cyber_EPIC = 50
     }
   }
 
@@ -3563,6 +3651,11 @@ ARMAETUS_THEMES =
 
       BROWN1   = 5
       BRVINE   = 10
+
+      CREYEWLL = 7
+      CRFSHWLL = 7
+      CRGRSWLL = 7
+      CRHRTWLL = 7
     }
 
     wall_groups =
@@ -3593,8 +3686,10 @@ ARMAETUS_THEMES =
 
     window_groups =
     {
-      gtd_window_gothic_epic = 60
-      gtd_window_chainlinks = 60
+      gtd_window_gothic_epic = 50
+      gtd_window_chainlinks = 30
+      gtd_window_goffik = 25
+      gtd_window_goffik_gold = 25
     }
 
     street_sinks =
@@ -3689,6 +3784,9 @@ ARMAETUS_THEMES =
       Skybox_garrett_hell_EPIC = 50
       Skybox_garrett_winterfall_EPIC = 35
       Skybox_craneo_egypt_EPIC = 35
+      Skybox_city_bridge_EPIC = 15
+      Skybox_g99_hell_tower_EPIC = 50
+      Skybox_city_hell_bloodfalls_EPIC = 50
     }
   }
 }
@@ -3718,6 +3816,11 @@ ARMAETUS_NATURALS =
       VINES3 = 10
       VINES4 = 10
       MOSROK3 = 10
+
+      GRNSTONE = 20
+      GREEN01 = 20
+      GREEN02 = 20
+      GREEN03 = 20
     }
   }
 
@@ -3743,6 +3846,11 @@ ARMAETUS_NATURALS =
       VINES3 = 20
       VINES4 = 20
       MOSROK3 = 20
+
+      GRNSTONE = 20
+      GREEN01 = 20
+      GREEN02 = 20
+      GREEN03 = 20
     }
   }
 
@@ -3765,19 +3873,30 @@ ARMAETUS_NATURALS =
       VINES2 = 3
       VINES3 = 3
       VINES4 = 3
+
+      GRNSTONE = 20
+
+      CREYEWLL = 5
+      CRFSHWLL = 5
+      CRGRSWLL = 5
+      CRHRTWLL = 5
     }
   }
 }
 
 -- exclude tables for specific environment themes
-ARMAETUS_EXCLUDE_DESERT_SKYBOXES =
+ARMAETUS_SKYBOX_EXCLUSIONS =
 {
-  "Skybox_craneo_egypt_EPIC"
-}
+  desert =
+  {
+    "Skybox_garrett_winterfall_EPIC"
+  }
 
-ARMAETUS_EXCLUDE_SNOW_SKYBOXES =
-{
-  "Skybox_garrett_winterfall_EPIC"
+  snow =
+  {
+    "Skybox_craneo_egypt_EPIC",
+    "Skybox_craneo_space_shuttle_EPIC"
+  }
 }
 
 -- intercepts for the new environment theme feature

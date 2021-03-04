@@ -98,7 +98,7 @@ PREFABS.Wall_hell_sharp_alcoves_white = --#
   template = "Wall_hell_sharp_alcoves_single_red"
   map = "MAP01"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   tex_FIREMAG1 = "ICEFALL"
   thing_46 = 86
@@ -109,7 +109,7 @@ PREFABS.Wall_hell_sharp_alcoves_double_white = --#
   template = "Wall_hell_sharp_alcoves_single_red"
   map = "MAP02"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   tex_FIREMAG1 = "ICEFALL"
   thing_46 = 86
@@ -122,7 +122,7 @@ PREFABS.Wall_hell_sharp_alcoves_black = --#
   template = "Wall_hell_sharp_alcoves_single_red"
   map = "MAP01"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   tex_FIREMAG1 = "FIREBLK1"
   thing_46 = 41
@@ -133,8 +133,19 @@ PREFABS.Wall_hell_sharp_alcoves_double_black = --#
   template = "Wall_hell_sharp_alcoves_single_red"
   map = "MAP02"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   tex_FIREMAG1 = "FIREBLK1"
   thing_46 = 41
+}
+
+-- Yellow version by Demios, needed this version to hide my new secret
+
+PREFABS.Wall_hell_sharp_alcoves_yellow = --#
+{
+  template = "Wall_hell_sharp_alcoves_single_red"
+  map = "MAP01"
+
+  tex_FIREMAG1 = "CRACKLE4"
+  thing_46 = 35
 }

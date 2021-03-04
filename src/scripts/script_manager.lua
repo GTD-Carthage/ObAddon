@@ -71,13 +71,26 @@ function ScriptMan_assemble_mapinfo_lump()
   end
 
   table.insert(mapinfo_lines, "\n}\n")
+
+  local doomednum_lines = {
+      "DoomedNums\n",
+      "{\n",
+  }
   if SCRIPTS.fauna_mapinfo then
-    table.insert(mapinfo_lines, "DoomedNums\n")
-    table.insert(mapinfo_lines, "{\n")
     each line in SCRIPTS.fauna_mapinfo do
+      table.insert(doomednum_lines,line)
+    end
+  end
+  if PARAM.marine_gen then
+    each line in PARAM.MARINEMAPINFO do
+      table.insert(doomednum_lines,line)
+    end
+  end
+  if #doomednum_lines > 2 then
+    table.insert(doomednum_lines, "}\n")
+    each line in doomednum_lines do
       table.insert(mapinfo_lines,line)
     end
-      table.insert(mapinfo_lines, "}\n")
   end
 
   if PARAM.mapinfolump != nil then
@@ -91,12 +104,27 @@ function ScriptMan_assemble_mapinfo_lump()
   end
 end
 
+function ScriptMan_assemble_trnslate_lump()
+  local trnslate_lines = ""
+
+  if PARAM.MARINETRNSLATE then
+    trnslate_lines = trnslate_lines .. PARAM.MARINETRNSLATE .. "\n"
+  end
+
+  if trnslate_lines != "" then
+    add_script_lump("TRNSLATE", trnslate_lines)
+  end
+end
+
 
 function ScriptMan_assemble_zscript_lump()
   local zscript_lines = ""
 
   if PARAM.boss_gen and PARAM.boss_count != -1 then
     zscript_lines = zscript_lines .. PARAM.BOSSSCRIPT .. "\n"
+  end
+  if PARAM.marine_gen then
+    zscript_lines = zscript_lines .. PARAM.MARINESCRIPT .. "\n"
   end
   if PARAM.custom_trees == "zs" then
     zscript_lines = zscript_lines ..
@@ -125,8 +153,13 @@ function ScriptMan_assemble_decorate_lump()
     ARMAETUS_EPIC_TEXTURES.TEMPLATES.DEC_TREES .. "\n"
   end
   if PARAM.dynamic_lights == "yes" then
-    decorate_script_lines = decorate_script_lines ..
-    ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE .. "\n"
+    if OB_CONFIG.game == "heretic" then
+        decorate_script_lines = decorate_script_lines ..
+        ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE .. "\n"
+    else
+        decorate_script_lines = decorate_script_lines ..
+        ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE .. "\n"
+    end
   end
   if SCRIPTS.hn_marker_decorate_lines then
     decorate_script_lines = decorate_script_lines ..
@@ -173,13 +206,28 @@ function ScriptMan_assemble_gldefs_lump()
   local gldefs_lines = ""
 
   if PARAM.dynamic_lights == "yes" then
-    gldefs_lines = gldefs_lines ..
-    ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS
+    if OB_CONFIG.game == "heretic" then
+        gldefs_lines = gldefs_lines ..
+        ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS
+    else
+        gldefs_lines = gldefs_lines ..
+        ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS
+    end
   end
 
   if PARAM.glowing_flats == "yes" then
+    if OB_CONFIG.game == "heretic" then
+        gldefs_lines = gldefs_lines ..
+        ZDOOM_SPECIALS_HERETIC.GLOWING_FLATS_GLDEFS
+    else
+        gldefs_lines = gldefs_lines ..
+        ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS
+    end
+  end
+
+  if PARAM.include_brightmaps == "yes" then
     gldefs_lines = gldefs_lines ..
-    ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS
+    EPIC_BRIGHTMAPS
   end
 
   if gldefs_lines != "" then
@@ -261,6 +309,7 @@ function ScriptMan_init()
   ScriptMan_assemble_gldefs_lump()
   ScriptMan_assemble_sndinfo_lump()
   ScriptMan_assemble_mapinfo_lump()
+  ScriptMan_assemble_trnslate_lump()
   ScriptMan_assemble_language_lump()
   ScriptMan_assemble_acs_loader_lump()
   ScriptMan_assemble_textures_lump()

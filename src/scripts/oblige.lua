@@ -26,7 +26,7 @@ gui.import("prefab")
 gui.import("autodetail")
 
 gui.import("seed")
-gui.import("shapes")
+--gui.import("shapes")
 gui.import("grower")
 gui.import("area")
 gui.import("connect")
@@ -693,6 +693,9 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- Tapwave")
   do_line("-- Swedra")
   do_line("-- Demios")
+  do_line("-- Scionox")
+  do_line("-- josh771")
+  do_line("-- dashodanger")
   do_line("-- https://github.com/caligari87/ObAddon/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed != 0 then
@@ -827,6 +830,7 @@ function ob_load_all_modules()
   gui.printf("Loading all modules...\n")
 
   local list = gui.scan_directory("modules", "*.lua")
+  local subdirs = gui.scan_directory("modules", "DIRS")
 
   if not list then
     gui.printf("FAILED: scan 'modules' directory\n")
@@ -838,6 +842,21 @@ function ob_load_all_modules()
   each filename in list do
     gui.debugf("  %s\n", filename)
     gui.import(filename)
+  end
+
+  if subdirs then
+    each directory in subdirs do
+      list = gui.scan_directory("modules/" .. directory, "*.lua")
+      if not list then
+        gui.printf("FAILED: scan 'modules' subdirectory\n")
+        return
+      end
+      gui.set_import_dir("modules/" .. directory)
+      each filename in list do
+        gui.debugf("  %s\n", filename)
+        gui.import(filename)
+      end
+    end
   end
 
   gui.set_import_dir("")
@@ -869,12 +888,15 @@ function ob_init()
   gui.printf("          Frozsoul\n")
   gui.printf("          Simon-v\n")
   gui.printf("           Beed28\n")
-  gui.printf("           Craneo\n")
-  gui.printf("           MogWaltz\n")
-  gui.printf("       EpicTyphlosion\n")
-  gui.printf("           Tapwave\n")
-  gui.printf("           Swedra\n")
-  gui.printf("           Demios\n")
+  gui.printf("          Craneo\n")
+  gui.printf("          MogWaltz\n")
+  gui.printf("      EpicTyphlosion\n")
+  gui.printf("          Tapwave\n")
+  gui.printf("          Swedra\n")
+  gui.printf("          Demios\n")
+  gui.printf("          Scionox\n")
+  gui.printf("          josh771\n")
+  gui.printf("        dashodanger\n")
   gui.printf("    And All of Our Fans!\n\n")
   gui.printf("--------------------------------------------\n")
   gui.printf("-- https://github.com/caligari87/ObAddon/ --\n")
@@ -1301,10 +1323,6 @@ function ob_transfer_ui_options()
   if OB_CONFIG.theme == "mixed" then
      OB_CONFIG.theme = "epi"
   end
-
-  --[[ if OB_CONFIG.size == "tiny" then
-     OB_CONFIG.size = "small"
-  end]]
 end
 
 

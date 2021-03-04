@@ -5,7 +5,7 @@
 --  Oblige Level Maker // ObAddon
 --
 --  Copyright (C) 2015-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -713,7 +713,7 @@ function Grower_preprocess_grammar()
 
   ---| Grower_preprocess_grammar |---
 
-  local gramgram = SHAPE_GRAMMAR
+  local gramgram = GAME.SHAPE_GRAMMAR
 
   local function process_some_cool_grammars(grammar)
 
@@ -865,7 +865,7 @@ function Grower_calc_rule_probs()
 
   PARAM.skipped_rules = 0
 
-  each name,rule in SHAPE_GRAMMAR do
+  each name,rule in GAME.SHAPE_GRAMMAR do
     rule.use_prob = calc_prob(rule)
     if rule.use_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
@@ -889,16 +889,8 @@ function Grower_calc_rule_probs()
   if not LEVEL.is_procedural_gotcha then
     if OB_CONFIG.layout_absurdity == "all" then
       LEVEL.is_absurd = true
-    elseif OB_CONFIG.layout_absurdity == "75" then
-      if rand.odds(75) then
-        LEVEL.is_absurd = true
-      end
-    elseif OB_CONFIG.layout_absurdity == "50" then
-      if rand.odds(50) then
-        LEVEL.is_absurd = true
-      end
-    elseif OB_CONFIG.layout_absurdity == "25" then
-      if rand.odds(25) then
+    elseif OB_CONFIG.layout_absurdity != "none" then
+      if rand.odds(int(OB_CONFIG.layout_absurdity)) then
         LEVEL.is_absurd = true
       end
     end
@@ -915,7 +907,7 @@ function Grower_calc_rule_probs()
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
     local grammarset = {}
-    each name,rule in SHAPE_GRAMMAR do
+    each name,rule in GAME.SHAPE_GRAMMAR do
       table.insert(grammarset, rule.name)
     end
 
@@ -929,19 +921,22 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"SIDEWALK")
       and not string.match(absurded_rule,"hall")
       and not string.match(absurded_rule,"HALL")
-      and SHAPE_GRAMMAR[absurded_rule].is_absurd != true
-      and SHAPE_GRAMMAR[absurded_rule].use_prob != 0 then
+      and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd != true
+      and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob != 0 then
 
         local ab_factor = 0
         if rand.odds(75) then
           ab_factor = rand.range( 100,1000000 )
-          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          if GAME.SHAPE_GRAMMAR[absurded_rule].new_area then
+            LEVEL.has_absurd_new_area_rules = true
+          end
         else
           ab_factor = rand.range( 0.01,0.75 )
-          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
+          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * ab_factor
         end
 
-        SHAPE_GRAMMAR[absurded_rule].is_absurd = true
+        GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
 
         if  PARAM.print_shape_steps and PARAM.print_shape_steps != "no" then
           gui.printf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
@@ -1061,6 +1056,17 @@ function Grower_decide_extents()
 
   LEVEL.min_rooms = math.max(3, int(base / 3))
   LEVEL.max_rooms = math.max(6, int(base))
+
+  -- add extra rooms based on extra size and area multiplier
+
+  if LEVEL.size_multiplier then
+    if LEVEL.size_multiplier < 1 then
+      LEVEL.max_rooms = int(LEVEL.max_rooms * ((1 - LEVEL.size_multiplier)+1) * 2/3)
+    end
+    if LEVEL.area_multiplier < 1 then
+      LEVEL.max_rooms = int(LEVEL.max_rooms * ((1 - LEVEL.area_multiplier)+1) * 2/3)
+    end
+  end
 
   -- specific instructions for procedural gotcha
 
@@ -1540,7 +1546,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
 
-  grammar = SHAPE_GRAMMAR
+  grammar = GAME.SHAPE_GRAMMAR
 
   --
 
@@ -2624,7 +2630,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       reqs.env = A.room:get_env()
 
       if R.theme and R.theme.theme_override then
-        reqs.theme = R.theme.theme_override
+        reqs.theme_override = R.theme.theme_override
       end
     end
 
@@ -3590,10 +3596,6 @@ function Grower_grammatical_room(R, pass, is_emergency)
       apply_num = math.ceil(apply_num * 0.25)
     end
 
-  elseif pass == "liquefy" then
-
-    apply_num = math.round(style_sel("liquids", 4, 6, 8, 10))
-
   else
     error("unknown grammar pass: " .. tostring(pass))
   end
@@ -3822,17 +3824,6 @@ function Grower_sprout_room(R)
     -- to distort the layout a bit more
     Grower_grammatical_room(R, "square_out")
     R.is_squarified = true
-
-    -- liquefy pass - adds more liquid elements to rooms
-    -- in an attemp to break away from preset liquid chunks
-    -- set by shape rules
-    -- MSSP-TODO: skip specific rules instead of skipping the pass entirely
-    -- for symmetric rooms
-    if LEVEL.liquid and rand.odds(style_sel("liquids", 20, 40, 60, 80))
-    and not R.symmetry then
-      Grower_grammatical_room(R, "liquefy")
-      R.is_liquid_pooled = true
-    end
   end
 
   -- if hallway did not sprout, try again
@@ -4647,7 +4638,7 @@ function Grower_create_rooms()
   Seed_squarify()
 
   -- debugging aid
-  if OB_CONFIG.svg then
+  if OB_CONFIG.svg or (PARAM.save_svg and PARAM.save_svg == "yes") then
     Seed_save_svg_image("grow_" .. OB_CONFIG.seed .. "_" .. LEVEL.name .. ".svg")
   end
 
@@ -4659,7 +4650,7 @@ function Grower_create_rooms()
     "NAME: APPLY COUNT / TRIAL COUNT : USE PROBABILITY\n")
     each rule, info in GROWER_DEBUG_INFO do
 
-      local cur_prob = SHAPE_GRAMMAR[info.name].use_prob
+      local cur_prob = GAME.SHAPE_GRAMMAR[info.name].use_prob
 
       gui.printf(info.name .. ": ")
       if info.trials > 0 then
@@ -4670,7 +4661,7 @@ function Grower_create_rooms()
       end
 
 
-      if SHAPE_GRAMMAR[info.name].is_absurd then
+      if GAME.SHAPE_GRAMMAR[info.name].is_absurd then
         gui.printf(" (ABSURD)")
       end
 

@@ -12,6 +12,8 @@ PREFABS.Joiner_mirrors1 =
 
   prob   = 1000
 
+  filter = "mirror_maze"
+
   theme  = "hell"
 
   where  = "seeds"
@@ -32,28 +34,13 @@ PREFABS.Joiner_mirrors1 =
 --room of mirrors2
 PREFABS.Joiner_mirrors2 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1"
   map    = "MAP02"
 
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
+  filter = "mirror_maze"
 
   seed_w = 2
   seed_h = 3
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --rift1
@@ -82,9 +69,8 @@ PREFABS.Joiner_rift1 =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
-
 
 --rift2
 PREFABS.Joiner_rift2 =
@@ -112,7 +98,7 @@ PREFABS.Joiner_rift2 =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
 
 
@@ -142,10 +128,8 @@ PREFABS.Joiner_rift3 =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
-
-
 
 --rift4
 PREFABS.Joiner_rift4 =
@@ -173,7 +157,7 @@ PREFABS.Joiner_rift4 =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
 
 --room of mirrors1V2
@@ -185,6 +169,8 @@ PREFABS.Joiner_mirrors1V2 =
   engine = "zdoom"
 
   prob   = 1000
+
+  filter = "mirror_maze"
 
   theme  = "hell"
 
@@ -206,136 +192,42 @@ PREFABS.Joiner_mirrors1V2 =
 --room of mirrors2V2
 PREFABS.Joiner_mirrors2V2 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1V2"
   map    = "MAP08"
-
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
 
   seed_w = 2
   seed_h = 3
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --room of mirrors1V3
 PREFABS.Joiner_mirrors1V3 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1V2"
   map    = "MAP09"
-
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
-
-  seed_w = 3
-  seed_h = 2
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --room of mirrors1V4
 PREFABS.Joiner_mirrors1V4 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1V2"
   map    = "MAP10"
-
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
-
-  seed_w = 3
-  seed_h = 2
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --room of mirrors3 mazeish
 PREFABS.Joiner_mirrors3 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1V2"
   map    = "MAP11"
-
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
-
-  seed_w = 3
-  seed_h = 2
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --room of mirrors4 mazeish
 PREFABS.Joiner_mirrors4 =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1V2"
   map    = "MAP12"
-
-  engine = "zdoom"
-
-  prob   = 1000
-
-  theme  = "hell"
-
-  where  = "seeds"
-  shape  = "I"
 
   seed_w = 2
   seed_h = 3
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
 }
 
 --rift1 trapped
@@ -366,7 +258,7 @@ PREFABS.Joiner_rift1trap =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
 
 --rift4 trapped
@@ -397,7 +289,7 @@ PREFABS.Joiner_rift4trap =
 
   can_flip = true
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 }
 
 --room of mirrors1 secret
@@ -409,6 +301,8 @@ PREFABS.Joiner_mirrors1S =
   engine = "zdoom"
 
   prob   = 550
+
+  filter = "mirror_maze"
 
   theme  = "hell"
 
@@ -438,37 +332,11 @@ PREFABS.Joiner_mirrors1S =
 --room of mirrors2 secret
 PREFABS.Joiner_mirrors2S =
 {
-  file   = "joiner/dem_hell_joiners.wad"
+  template = "Joiner_mirrors1S"
   map    = "MAP16"
-
-  engine = "zdoom"
-
-  prob   = 550
-
-  theme  = "hell"
-
-  style = "secrets"
-
-  where  = "seeds"
-  shape  = "I"
 
   seed_w = 2
   seed_h = 3
-
-  deep = 16
-  over = 16
-
-  x_fit = "frame"
-  y_fit  = "frame"
-
-  can_flip = true
-
-
-  thing_2013 =
-  {
-    soul = 50
-    blue_armor = 50
-  }
 }
 
 --room of eyes1
@@ -664,8 +532,4 @@ PREFABS.Joiner_eyes2s =
     allmap = 50
     goggles = 50
   }
-
-
 }
-
-

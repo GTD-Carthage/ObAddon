@@ -97,11 +97,7 @@ function Monster_pacing()
       if R.is_hallway or R.is_secret then
         R.pressure = "low"
         if R.is_secret and OB_CONFIG.secret_monsters == "yesyes" then
-          if rand.odds(75) then
-            R.pressure = "medium"
-          else
-            R.pressure = "high"
-          end
+          R.pressure = rand.sel(75, "medium", "high")
         end
         continue
       end
@@ -149,12 +145,8 @@ function Monster_pacing()
 
 
   local function handle_known_room(R)
-    if R == LEVEL.exit_room then
-      set_room(R, "high")
-      return
-    end
-
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+    if R == LEVEL.exit_room 
+    or (LEVEL.is_procedural_gotcha and PARAM.boss_gen) then
       set_room(R, "high")
       return
     end
@@ -898,24 +890,8 @@ function Monster_fill_room(R)
 
       local gotcha_qty = 1.25
 
-      if PARAM["gotcha_qty"] then
-        if PARAM["gotcha_qty"] == "-50" then
-          gotcha_qty = 0.5
-        elseif PARAM["gotcha_qty"] == "-25" then
-          gotcha_qty = 0.75
-        elseif PARAM["gotcha_qty"] == "none" then
-          gotcha_qty = 1.0
-        elseif PARAM["gotcha_qty"] == "25" then
-          gotcha_qty = 1.25
-        elseif PARAM["gotcha_qty"] == "50" then
-          gotcha_qty = 1.5
-        elseif PARAM["gotcha_qty"] == "100" then
-          gotcha_qty = 2.0
-        elseif PARAM["gotcha_qty"] == "200" then
-          gotcha_qty = 4.0
-        elseif PARAM["gotcha_qty"] == "400" then
-          gotcha_qty = 8.0
-        end
+      if PARAM.gotcha_qty then
+        gotcha_qty = PROC_GOTCHA_QUANTITY_MULTIPLIER[PARAM.gotcha_qty]
       end
 
       qty = qty * gotcha_qty
@@ -924,6 +900,17 @@ function Monster_fill_room(R)
         qty = 0.1
       end
 
+    end
+
+    if PARAM.marine_gen and PARAM.level_has_marine_closets
+    and R.secondary_important and R.secondary_important.kind == "marine_closet" then
+      if PARAM.m_c_quantity == "more" then
+        qty = qty * 1.5
+      elseif PARAM.m_c_quantity == "lot" then
+        qty = qty * 2.0
+      elseif PARAM.m_c_quantity == "horde" then
+        qty = qty * 3.0
+      end
     end
 
   --hallway edits Armaetus
@@ -961,8 +948,34 @@ function Monster_fill_room(R)
     gui.debugf("raw quantity in %s --> %1.2f\n", R.name, qty)
 --]]
 
+    -- MSSP: experiment; more monsters in big rooms with multiple platforms
+    -- even larger numbers if it has floor areas of a significant height
+    -- and distance from the initial entry point
+
+    -- R.trunk flag ensures ganking is unlikely on teleporter-entry rooms
+    if R.is_big and (R.grow_parent and not R.grow_parent:has_teleporter()) then
+      local total_extra = 0
+      each A in R.areas do
+        if A.mode == "floor" then
+          local area_score = int(A.svolume / 16)
+          local height_score = math.abs(A.floor_h - R.entry_h) / 128 * 1.5
+          -- local distance_score
+
+          local extra = int(area_score * height_score)
+          qty = qty + extra
+
+          total_extra = total_extra + extra
+        end
+      end
+    end
+
     -- a small random adjustment
     qty = qty * rand.range(0.9, 1.1)
+
+    -- nerf teleporter trunk quantities a bit
+    if R.grow_parent and R.grow_parent:has_teleporter() then
+      qty = qty * rand.range(0.5, 0.8)
+    end
 
     gui.debugf("Quantity = %1.1f%%\n", qty)
     return qty
@@ -1163,6 +1176,16 @@ function Monster_fill_room(R)
     if R.is_secret and OB_CONFIG.secret_monsters == "yes" then return 1 / info.damage end
 
     local factor = default_level(info)
+
+    if PARAM.marine_gen and PARAM.level_has_marine_closets and R.secondary_important and R.secondary_important.kind == "marine_closet" then
+      if PARAM.m_c_strength == "harder" then
+        return 1.3 ^ factor
+      elseif PARAM.m_c_strength == "tough" then
+        return 1.7 ^ factor
+      elseif PARAM.m_c_strength == "fierce" then
+        return 2.5 ^ factor
+      end
+    end
 
     if OB_CONFIG.strength == "weak"   then return 1 / (1.7 ^ factor) end
     if OB_CONFIG.strength == "easier" then return 1 / (1.3 ^ factor) end
@@ -2019,6 +2042,14 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       local min_val = 1
 
       local choice
+      local tab =
+      {
+        tricky = 0.15
+        treacherous = 0.25
+        dangerous = 0.50
+        deadly = 0.66
+        lethal = 0.85
+      }
 
       if what == "cage" then
         choice = OB_CONFIG.cage_qty
@@ -2036,12 +2067,10 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
         end
       elseif choice == "default" then
         min_val = 1
-      elseif choice == "harder" then
-        min_val = int(min_val + (spot_total * 0.33))
-      elseif choice == "fortified" then
-        min_val = int(min_val + (spot_total * 0.66))
       elseif choice == "crazy" then
         min_val = spot_total
+      else
+        min_val = int(min_val + (spot_total * tab[choice]))
       end
 
       return min_val

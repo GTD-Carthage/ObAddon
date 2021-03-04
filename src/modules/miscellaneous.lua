@@ -54,6 +54,7 @@ MISC_STUFF.LIVEMAP_CHOICES =
 
 MISC_STUFF.SINK_STYLE_CHOICES =
 {
+  "themed", _("Per Theme"),
   "curved", _("Curved"),
   "sharp", _("Sharp"),
   "random", _("Random"),
@@ -76,6 +77,13 @@ MISC_STUFF.WINDOW_BLOCKING_CHOICES =
   "all",           _("All"),
 }
 
+MISC_STUFF.RAIL_BLOCKING_CHOICES =
+{
+  "never",       _("Never"),
+  "on_occasion", _("Occasional"),
+  "all",         _("All"),
+}
+
 MISC_STUFF.LIQUID_SINK_OPTIONS =
 {
   "yes",          _("Yes"),
@@ -92,6 +100,54 @@ MISC_STUFF.LINEAR_START_CHOICES =
   "12",      _("12% of All Levels"),
   "default", _("DEFAULT"),
 }
+
+MISC_STUFF.ROOM_SIZE_MULTIPLIER_CHOICES =
+{
+  "0.25", _("x0.25"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.25", _("x1.25"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "6", _("x6"),
+  "8", _("x8"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF.AREA_COUNT_MULTIPLIER_CHOICES =
+{
+  "0.15", _("x0.15"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES =
+{
+  "normal", _("Vanilla"),
+  "strict", _("Strict"),
+  "mixed", _("Mix It Up")
+}
+
+function MISC_STUFF.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  each opt in self.options do
+    if opt.name == "room_size_multiplier" or
+    opt.name == "room_area_multiplier" or
+    opt.name == "room_size_consistency" then
+      PARAM[opt.name] = opt.value
+    end
+  end
+end
 
 function MISC_STUFF.begin_level(self)
   each opt in self.options do
@@ -120,11 +176,14 @@ OB_MODULES["misc"] =
 {
   label = _("Miscellaneous")
 
+  game = "doomish"
+
   side = "left"
   priority = 103
 
   hooks =
   {
+    setup = MISC_STUFF.setup
     begin_level = MISC_STUFF.begin_level
   }
 
@@ -149,6 +208,35 @@ OB_MODULES["misc"] =
       tooltip = "Gets exit room theme to follow the theme of the next level, if different."
       default = "yes"
       gap=1
+    }
+
+    {
+      name="room_size_multiplier", label=_("Room Size Multiplier")
+      choices = MISC_STUFF.ROOM_SIZE_MULTIPLIER_CHOICES
+      default = "mixed"
+      tooltip = "Alters the general size and ground coverage of rooms.\n\n" ..
+        "Vanilla: No room size multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+    }
+    {
+      name="room_area_multiplier", label=_("Area Count Multiplier")
+      choices = MISC_STUFF.AREA_COUNT_MULTIPLIER_CHOICES
+      default = "mixed"
+      tooltip = "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or "..
+        "simply different ceilings if a level has no steepness.\n\n" ..
+        "Vanilla: No area quantity multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+    }
+    {
+      name="room_size_consistency", label=_("Size Consistency")
+      choices = MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES
+      default = "mixed"
+      tooltip = "Changes whether rooms follow a strict single size or not. " ..
+        "Can be paired with above choices for more enforced results.\n\n" ..
+        "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
+        "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
+        "Mix It Up: A mixture of 75% Vanilla, 25% Strict."
+      gap = 1
     }
 
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES }
@@ -188,7 +276,17 @@ OB_MODULES["misc"] =
       tooltip=_("Sets the preferences for passability on certain windows. On Vistas Only means only windows " ..
                 "that look out to vistas/map border scenics have a blocking line."),
       default="not_on_vistas",
-      gap=1
+    }
+    {
+      name="passable_railings",
+      label=_("Passable Railings"),
+      choices=MISC_STUFF.RAIL_BLOCKING_CHOICES,
+      tooltip=_("Sets the passability of railing junctions between full impassability or the 3D midtex flag. " ..
+            "Occasional means 3D midtex is only used on railings between areas the player is supposed to " ..
+            "circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to " ..
+            "potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."),
+      default="never",
+      gap=1,
     }
 
     { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES }
@@ -209,9 +307,11 @@ OB_MODULES["misc"] =
       label=_("Sink Style"),
       choices=MISC_STUFF.SINK_STYLE_CHOICES,
       tooltip = "Determines the style for corners with sunken " ..
-                "ceilings and floors. Default is Curved, where Oblige makes sink " ..
-                "corners soft, while Sharp leaves the corners angular.",
-      default = "random",
+                "ceilings and floors. Curved makes sink " ..
+                "corners soft, while Sharp leaves the corners angular. " ..
+                "Per Theme means choice is controlled by theme profile instead. " ..
+                "Tech-ish maps favor sharp corners while hell-ish favor curved.",
+      default = "themed",
     }
     {
       name = "liquid_sinks"

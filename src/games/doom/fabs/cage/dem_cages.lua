@@ -25,7 +25,7 @@ PREFABS.Cage_dem_garage_ambush1 =
   over   = -16
 
   x_fit = "frame"
-  y_fit  = "frame"
+  y_fit = "frame"
 
   tex_BRICK9 = { BRICK1=50, BRICK10=50, BRICK11=50,
     BRICK2=50, BRICK3=50, BRICK4=50,
@@ -187,7 +187,7 @@ PREFABS.Cage_dem_bunker_ambush1 =
   y_fit  = "frame"
   z_fit = { 56,64 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 
   thing_3004 =
@@ -247,7 +247,7 @@ PREFABS.Cage_dem_ledge_ambush1 =
   bound_z2 = 128
 
   x_fit = "frame"
-  z_fit = { 18,26 }
+  z_fit = "top"
 
 }
 
@@ -258,6 +258,8 @@ PREFABS.Cage_dem_ledge_ambush2 =
   map = "MAP08"
   env    = "cave"
 
+
+  x_fit = "frame"
   z_fit = { 16,24 }
 
 }
@@ -269,8 +271,35 @@ PREFABS.Cage_dem_ledge_ambush3 =
   map = "MAP09"
   env = "nature"
   group = "natural_walls"
+
+
+  x_fit = "frame"
+  z_fit = { 18,26 }
 }
 
+PREFABS.Cage_dem_ledge_ambush4 =
+{
+  template = "Cage_dem_ledge_ambush1"
+
+  map = "MAP17"
+  env = "park"
+
+  bound_z1 = 0
+  bound_z2 = 184
+
+}
+
+PREFABS.Cage_dem_ledge_ambush5 =
+{
+  template = "Cage_dem_ledge_ambush1"
+
+  map = "MAP18"
+  env = "park"
+
+  bound_z1 = 0
+  bound_z2 = 232
+
+}
 
 ---- natural shrine getting corrupted by demon ----
 
@@ -301,7 +330,7 @@ PREFABS.Cage_dem_shrineC =
 
   z_fit = { 56,64 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -341,12 +370,12 @@ PREFABS.Cage_dem_ruinsN1amb =
   over = -16
 
   bound_z1 = 0
-  bound_z2 = 152
+  bound_z2 = 144
 
   x_fit = "stretch"
   z_fit = { 84,92 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -382,7 +411,7 @@ PREFABS.Cage_dem_ruinsC1amb =
   x_fit = "stretch"
   z_fit = { 84,92 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
 }
 
@@ -424,7 +453,7 @@ PREFABS.Cage_dem_cabinamb =
 
   z_fit = { 99,104 }
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   thing_10 =
   {
@@ -438,8 +467,3 @@ PREFABS.Cage_dem_cabinamb =
   }
 
 }
-
-
-
-
-

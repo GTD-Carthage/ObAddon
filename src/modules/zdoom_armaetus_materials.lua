@@ -555,6 +555,7 @@ ARMAETUS_MATERIALS = {
   SHAWVEN2 = { t="SHAWVEN2", f="FLAT23" }
   SILVBLU1 = { t="SILVBLU1", f="FLAT23" }
   SILVCOMP = { t="SILVCOMP", f="FLAT23" }
+  SHAWSH04 = { t="SHAWSH04", f="SHINY04"}
 
   SILVER2G = { t="SILVER2G", f="FLAT23" }
   SILVER2R = { t="SILVER2R", f="FLAT23" }
@@ -660,7 +661,6 @@ ARMAETUS_MATERIALS = {
   DESROCK4 = { t="DESROCK4", f="RROCK09" } -- Tan rock
   DESROCK5 = { t="DESROCK5", f="RROCK17" } -- Brown rock
 
-
   -- Tekwall / Startan-types
   STARBR1 = { t="STARBR1", f="FLOOR0_2" }
   STARGRY1 = { t="STARGRY1", f="SHINY01" }
@@ -670,7 +670,7 @@ ARMAETUS_MATERIALS = {
   TEKGRY01 = { t="TEKGRY01", f="RROCK21" }
   TEKGRY02 = { t="TEKGRY02", f="RROCK21" }
   TEKSHAW = { t="TEKSHAW", f="SHINY02" }
-  TKWALL2 = { t="TKWALL2", f="CEIL5_1" }
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
   TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
   TEKWALL7 = { t="TEKWALL7", f="FLOOR7_1" }
   TEKWALL8 = { t="TEKWALL8", f="TEK1" } -- Red
@@ -1170,6 +1170,23 @@ ARMAETUS_MATERIALS = {
   MONYSIDE = { t="MONYSIDE", f="MONYFLAT"}
   MONYFLAT = { t="MONYFRON", f="MONYFLAT"}
 
+  CREYEWLL = { t="CREYEWLL", f="FLAT15"} -- red skin wall with eyes
+  CRFSHWLL = { t="CRFSHWLL", f="FLAT15"} -- red flesh wall
+  CRGRSWLL = { t="CRGRSWLL", f="FLAT5_5"} -- brown flesh wall with lacerations
+  CRHRTWLL = { t="CRHRTWLL", f="FLAT15"} -- red flesh wall with lacerations
+
+  -- Craneo's arcade machine screens
+  ARCD2 = { t="ARCD2", f="CEIL4_3"}
+  ARCD3 = { t="ARCD3", f="CEIL4_3"}
+  ARCD4 = { t="ARCD4", f="CEIL4_3"}
+  ARCD5 = { t="ARCD5", f="CEIL4_3"}
+  ARCD6 = { t="ARCD6", f="CEIL4_3"}
+  ARCD7 = { t="ARCD7", f="CEIL4_3"}
+  ARCD8 = { t="ARCD8", f="CEIL4_3"}
+  ARCD9 = { t="ARCD9", f="CEIL4_3"}
+  ARCD10 = { t="ARCD10", f="CEIL4_3"}
+  ARCD11 = { t="ARCD11", f="CEIL4_3"}
+
   ------------------------
   -- Composite textures --
   ------------------------
@@ -1213,6 +1230,9 @@ ARMAETUS_MATERIALS = {
   T_SDTCH4 = { t="CEM11", f = "T_SDTCH4"}
   T_SDTCH5 = { t="BROWN1", f = "T_SDTCH5"}
 
+  -- COMPBLUE recolors
+  COMPYELL = { t="COMPYELL", f = "ORANFLOR"} -- comp yellow, why more would you wallow!?
+
   -- Gothic --
 
   -- Light trims
@@ -1232,16 +1252,304 @@ ARMAETUS_MATERIALS = {
   ----------------------
 
   FINVSBLE = { t="FINVSBLE", f="FINVSBLE"}
-
-  -- Craneo's arcade machine screens
-  ARCD2 = { t="ARCD2", f="CEIL4_3"}
-  ARCD3 = { t="ARCD3", f="CEIL4_3"}
-  ARCD4 = { t="ARCD4", f="CEIL4_3"}
-  ARCD5 = { t="ARCD5", f="CEIL4_3"}
-  ARCD6 = { t="ARCD6", f="CEIL4_3"}
-  ARCD7 = { t="ARCD7", f="CEIL4_3"}
-  ARCD8 = { t="ARCD8", f="CEIL4_3"}
-  ARCD9 = { t="ARCD9", f="CEIL4_3"}
-  ARCD10 = { t="ARCD10", f="CEIL4_3"}
-  ARCD11 = { t="ARCD11", f="CEIL4_3"}
 }
+
+EPIC_BRIGHTMAPS =
+[[brightmap texture COMPSTA3
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTA4
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTA5
+{
+  map OBRCPST2
+}
+brightmap texture COMPSTA6
+{
+  map OBRCPST2
+}
+brightmap texture COMPSTA7
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTA8
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTA9
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTAA
+{
+  map OBRCPST1
+}
+brightmap texture COMPSTAB
+{
+  map OBRCPST3
+}
+
+// shawcomp set
+
+brightmap texture SHAWCOMP
+{
+  map OBRSHCP1
+}
+brightmap texture CONSOLE3
+{
+  map OBRSHCP1
+}
+brightmap texture CONSOLE4
+{
+  map OBRCNSL4
+}
+
+// large single monitors
+
+brightmap texture COMPCT01
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT02
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT03
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT04
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT05
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT06
+{
+  map OBRCPCT1
+}
+brightmap texture COMPCT07
+{
+  map OBRCPCT2
+}
+
+// silver light variations
+brightmap texture SILVER2R
+{
+  map OBRSLVL
+}
+brightmap texture SILVER2O
+{
+  map OBRSLVL
+}
+brightmap texture SILVER2Y
+{
+  map OBRSLVL
+}
+brightmap texture SILVER2W
+{
+  map OBRSLVL
+}
+brightmap texture SILVER2G
+{
+  map OBRSLVL
+}
+
+// vent (the only one that needs a brightmap TBH
+brightmap texture COMPVEN2
+{
+  map OBRCPVN2
+}
+
+// vertical lights
+brightmap texture LITE2
+{
+  map OBRLITE2
+}
+brightmap texture LITE96
+{
+  map OBRLIT96
+}
+brightmap texture LITESTON
+{
+  map OBRLITSN
+}
+
+// comptiles
+brightmap texture COMPTIL2
+{
+  map OBRCPTIL
+}
+brightmap texture COMPTIL3
+{
+  map OBRCPTIL
+}
+brightmap texture COMPTIL4
+{
+  map OBRCPTIL
+}
+brightmap texture COMPTIL5
+{
+  map OBRCPTIL
+}
+brightmap texture COMPTIL6
+{
+  map OBRCPTIL
+}
+brightmap texture GRAYBLU1
+{
+  map OBRCPTIL
+}
+brightmap texture SILVBLU1
+{
+  map OBRCPTIL
+}
+brightmap texture TEKGRBLU
+{
+  map OBRCPTIL
+}
+
+// monitors with static/noise
+brightmap texture NOISE1
+{
+  map OBRNOIS1
+}
+brightmap texture NOISE2
+{
+  map OBRNOIS1
+}
+brightmap texture NOISE3
+{
+  map OBRNOIS1
+}
+brightmap texture NOISE4
+{
+  map OBRNOIS1
+}
+//
+brightmap texture NOISE2A
+{
+  map OBRNOIS2
+}
+brightmap texture NOISE2B
+{
+  map OBRNOIS2
+}
+brightmap texture NOISE2C
+{
+  map OBRNOIS2
+}
+brightmap texture NOISE2D
+{
+  map OBRNOIS2
+}
+//
+brightmap texture NOISE3A
+{
+  map OBRNOIS3
+}
+brightmap texture NOISE3B
+{
+  map OBRNOIS3
+}
+brightmap texture NOISE3C
+{
+  map OBRNOIS3
+}
+brightmap texture NOISE3D
+{
+  map OBRNOIS3
+}
+
+// lite5 recolors - excluding the original lite5
+brightmap texture T_VSLTEG
+{
+  map OBRLITE5
+}
+brightmap texture T_VSLTEO
+{
+  map OBRLITE5
+}
+brightmap texture T_VSLTEP
+{
+  map OBRLITE5
+}
+brightmap texture T_VSLTER
+{
+  map OBRLITE5
+}
+brightmap texture T_VSLTEY
+{
+  map OBRLITE5
+}
+
+// gothic stuf
+brightmap texture GLASS1
+{
+  map OBRGLSBG
+}
+brightmap texture GLASS2
+{
+  map OBRGLSBG
+}
+brightmap texture GLASS3
+{
+  map OBRGLSBG
+}
+brightmap texture GLASS4
+{
+  map OBRGLSBG
+}
+brightmap texture GLASS6
+{
+  map OBRGLSBG
+}
+brightmap texture GLASS11
+{
+  map OBRGLSTL
+}
+brightmap texture GLASS12
+{
+  map OBRGLSTL
+}
+brightmap texture GLASS13
+{
+  map OBRGLSTL
+}
+brightmap texture GLASS14
+{
+  map OBRGLSTL
+}
+brightmap texture GOTH21
+{
+  map OBRGT21
+}
+
+// gothic switches
+brightmap texture SW2SKUL1
+{
+  map OBRS2SK
+}
+brightmap texture SW2PENT
+{
+  map OBRS2PT
+}
+
+brightmap texture SW2QUAK
+{
+  map OBRS2QK
+}
+brightmap texture SW2GOTH
+{
+  map OBRS2GH
+}
+brightmap texture SW2CHN
+{
+  map OBRS2CN
+}
+]]

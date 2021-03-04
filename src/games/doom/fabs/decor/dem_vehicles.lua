@@ -12,7 +12,7 @@ PREFABS.Decor_apc =
   prob   = 4500
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -25,7 +25,7 @@ PREFABS.Decor_apc =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift1T =
@@ -35,10 +35,10 @@ PREFABS.Decor_forklift1T =
 
   engine = "zdoom"
 
-  prob   = 2000
+  prob   = 1500
   theme  = "tech"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -49,7 +49,7 @@ PREFABS.Decor_forklift1T =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift2T =
@@ -59,10 +59,10 @@ PREFABS.Decor_forklift2T =
 
   engine = "zdoom"
 
-  prob   = 2000
+  prob   = 1500
   theme  = "tech"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -73,7 +73,7 @@ PREFABS.Decor_forklift2T =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift3T =
@@ -83,10 +83,10 @@ PREFABS.Decor_forklift3T =
 
   engine = "zdoom"
 
-  prob   = 2000
+  prob   = 1500
   theme  = "tech"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -97,7 +97,7 @@ PREFABS.Decor_forklift3T =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift4T =
@@ -107,10 +107,10 @@ PREFABS.Decor_forklift4T =
 
   engine = "zdoom"
 
-  prob   = 2000
+  prob   = 1500
   theme  = "tech"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -121,7 +121,7 @@ PREFABS.Decor_forklift4T =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift5T =
@@ -131,10 +131,10 @@ PREFABS.Decor_forklift5T =
 
   engine = "zdoom"
 
-  prob   = 2000
+  prob   = 1500
   theme  = "tech"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -145,7 +145,7 @@ PREFABS.Decor_forklift5T =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 
   thing_22 =
   {
@@ -171,7 +171,7 @@ PREFABS.Decor_forklift1U =
   prob   = 2000
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   where  = "point"
   height = 128
@@ -180,7 +180,7 @@ PREFABS.Decor_forklift1U =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift2U =
@@ -193,7 +193,7 @@ PREFABS.Decor_forklift2U =
   prob   = 2000
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -204,7 +204,7 @@ PREFABS.Decor_forklift2U =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift3U =
@@ -217,7 +217,7 @@ PREFABS.Decor_forklift3U =
   prob   = 2000
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -228,7 +228,7 @@ PREFABS.Decor_forklift3U =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift4U =
@@ -241,7 +241,7 @@ PREFABS.Decor_forklift4U =
   prob   = 2000
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -252,7 +252,7 @@ PREFABS.Decor_forklift4U =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 }
 
 PREFABS.Decor_forklift5U =
@@ -265,7 +265,7 @@ PREFABS.Decor_forklift5U =
   prob   = 2000
   theme  = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   can_be_on_roads = true
 
@@ -276,7 +276,7 @@ PREFABS.Decor_forklift5U =
   bound_z1 = 0
   bound_z2 = 128
 
-  sink_mode = "never"
+  sink_mode = "never_liquids"
 
   thing_22 =
   {

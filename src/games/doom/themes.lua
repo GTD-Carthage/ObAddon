@@ -3,8 +3,8 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011,2019 Chris Pisarczyk / Armaetus
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2011,2019, 2021 Armaetus
+--  Copyright (C) 2019-2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1063,6 +1063,13 @@ DOOM.THEMES =
 
   tech =
   {
+    narrow_halls =
+    {
+      vent = 50
+      mineshaft = 50
+      access = 50
+    }
+
     liquids =
     {
       nukage = 70
@@ -1074,16 +1081,18 @@ DOOM.THEMES =
     facades =
     {
       BROWN1   = 80
-      STARTAN3 = 50
-      STARG3   = 40
       BROWNGRN = 40
+      STARGR1  = 30
+      STARG1   = 30
+      STARG3   = 40
+      STARTAN3 = 50
       STONE    = 30
       STONE2   = 30
       STONE3   = 30
       TEKGREN2 = 25
-      BROVINE2 = 15
+      BROVINE2 = 5
       GRAY7    = 15
-      GRAYVINE = 10
+      GRAYVINE = 5
 
       BROWN96  = 20
       METAL2   = 15
@@ -1091,6 +1100,10 @@ DOOM.THEMES =
       BRONZE3  = 15
       METAL1   = 10
       SLADWALL = 20
+
+      GRAY1 = 40
+      GRAY4 = 40
+      GRAY5 = 40
     }
 
     fences =
@@ -1243,9 +1256,26 @@ DOOM.THEMES =
       gtd_ribbed_lights = 25
       gtd_wall_high_gap_set = 12
       gtd_wall_high_gap_alt_set = 12
-      gtd_generic_half_floor = 25
+      gtd_generic_half_floor = 20
+      gtd_generic_half_floor_no_trim = 20
+      gtd_generic_half_floor_inverted_braced = 20
       gtd_wall_urban_cement_frame = 10
       gtd_generic_ceilwall = 25
+      gtd_generic_glow_wall = 25
+      gtd_generic_artsy_bedazzled = 2
+      gtd_generic_alt_colors = 25
+      gtd_generic_mid_band = 25
+      gtd_generic_double_banded_ceil = 25
+      gtd_generic_frame_light_band = 25
+      gtd_generic_frame_metal = 25
+      gtd_generic_artsy_center_braced_ind = 25
+      gtd_generic_d64_1x = 4
+      gtd_generic_d64_1x_yellow = 4
+      gtd_generic_d64_1x_blue = 4
+      gtd_generic_d64_2x = 4
+      gtd_generic_d64_2x_yellow = 4
+      gtd_generic_d64_2x_blue = 4
+      gtd_generic_tek_grate = 25
     }
 
     outdoor_wall_groups =
@@ -1273,13 +1303,16 @@ DOOM.THEMES =
       tech_o_hex_inset = 1
       tech_o_grated_greenwall = 1
       tech_o_everyone_likes_sewers = 1
-      tech_o_red_wall = 1
+      tech_o_red_wall = 0.5
+      tech_o_blue_wall = 0.5
       tech_o_lots_of_cement = 1
       tech_o_tekgren_grates_thing = 1
       tech_o_black_mesa_overlook = 1
       tech_o_compblue_tall = 1
       tech_o_grey_metal_sloped = 1
-      tech_o_tall_light = 1
+      tech_o_tall_light = 0.5
+      tech_o_tall_light_alt = 0.5
+      tech_o_hexagon_uac_spotlights = 1
     }
 
     window_groups =
@@ -1320,6 +1353,7 @@ DOOM.THEMES =
       Post_metal = 50
       Post_tech_1 = 50
       Post_tech_2 = 50
+      Post_tech_simple = 50
     }
 
     cave_torches =
@@ -1363,7 +1397,9 @@ DOOM.THEMES =
     {
       caves = { none=75, few=30 }
       outdoors = { none=15, few=40, some=80, heaps=10 }
+      beams   = { none=10, few=50, some=20, heaps=5  }
       big_rooms = { none=40, few=25, some=15, heaps=5 }
+      big_outdoor_rooms = { none=40, few=5, some=3, heaps=1 }
       hallways = { none=15, few=45, some=20, heaps=10 }
       windows = { few=15, some=85, heaps=40 }
       pictures = { few=20, some=75, heaps=45 }
@@ -1371,22 +1407,34 @@ DOOM.THEMES =
       doors = { few=25, some=75, heaps=30 }
       teleporters = { none=70, few=40, some=10, heaps=3 }
       keys = { none=20, few=80, some=70, heaps=30 }
+      trikeys = { none=10, few=60, some=20, heaps=5 }
       switches = { none=25, few=75, some=40, heaps=15 }
       secrets = { few=15, some=80, heaps=30 }
+      scenics = { none=10,  few=35, some=60, heaps=20 }
       symmetry = { none=50, few=50, some=50, heaps=50 }
       steepness = { few=30, some=70, heaps=40 }
       cages = { none=70, few=25, some=10, heaps=5 }
       traps = { few=60, some=40, heaps=20 }
       barrels = { few=5, some=85, heaps=60 }
       ambushes = { few=30, some=75, heaps=20 }
+      parks   = { none=10 , few=2 , some=1 , heaps=1 }
+      park_detail = { none=0, few=15, some=60, heaps=25 }
+      porches = { none=5,  few=30, some=60, heaps=15 }
+      fences = { none=20, few=40, some=70, heaps=10 }
     }
 
-    scenic_fence =
+    scenic_fences =
     {
       MIDBARS3 = 10
       MIDSPACE = 5
       MIDBARS1 = 8
       BRNSMALC = 2
+    }
+
+    sink_style =
+    {
+      sharp = 1
+      curved = 0.1
     }
 
     skyboxes =
@@ -1404,6 +1452,13 @@ DOOM.THEMES =
 
   urban =
   {
+    narrow_halls =
+    {
+      vent = 50
+      mineshaft = 50
+      access = 25
+    }
+
     liquids =
     {
       water = 60
@@ -1534,7 +1589,6 @@ DOOM.THEMES =
       light_side4 = 70
       light_side5 = 70
       light_side6 = 70
-
     }
 
     beam_groups =
@@ -1550,12 +1604,12 @@ DOOM.THEMES =
 
     wall_groups =
     {
-      torches2 = 25 --red
-      torches3 = 25 --blue
-      torches1 = 25 --green
+      torches2 = 10 --red
+      torches3 = 10 --blue
+      torches1 = 10 --green
       torches6 = 5
-      torches9 = 20 --burning barrel
-      torches10 = 3 --skull rock
+      torches9 = 3 --burning barrel
+      torches10 = 2 --skull rock
       gtd_wall_urban_storage = 8
       gtd_wall_tech_top_corner_light_set = 8
       gtd_wall_sewer = 10
@@ -1569,12 +1623,29 @@ DOOM.THEMES =
       gtd_ribbed_lights = 4
       gtd_wall_high_gap_set = 5
       gtd_wall_high_gap_alt_set = 5
-      gtd_generic_half_floor = 10
+      gtd_generic_half_floor = 8
+      gtd_generic_half_floor_no_trim = 8
+      gtd_generic_half_floor_inverted_braced = 8
       gtd_woodframe = 5
       gtd_woodframe_green = 5
       gtd_round_inset = 5
       gtd_wall_urban_cement_frame = 7
       gtd_generic_ceilwall = 10
+      gtd_generic_glow_wall = 15
+      gtd_generic_artsy_bedazzled = 15
+      gtd_generic_alt_colors = 15
+      gtd_generic_mid_band = 10
+      gtd_generic_double_banded_ceil = 15
+      gtd_generic_frame_light_band = 15
+      gtd_generic_frame_metal = 15
+      gtd_generic_artsy_center_braced_ind = 15
+      gtd_generic_d64_1x = 2
+      gtd_generic_d64_1x_yellow = 2
+      gtd_generic_d64_1x_blue = 2
+      gtd_generic_d64_2x = 2
+      gtd_generic_d64_2x_yellow = 2
+      gtd_generic_d64_2x_blue = 2
+      gtd_generic_tek_grate = 15
     }
 
     window_groups =
@@ -1621,8 +1692,12 @@ DOOM.THEMES =
       Post_metal = 50
       Post_tech_1 = 25
       Post_tech_2 = 25
-      Post_gothic_1 = 25
-      Post_gothic_2 = 25
+      Post_gothic_blue = 10
+      Post_gothic_green = 10
+      Post_gothic_red = 10
+      Post_gothic_blue_2 = 10
+      Post_gothic_green_2 = 10
+      Post_gothic_red_2 = 10
     }
 
     cave_torches =
@@ -1687,32 +1762,44 @@ DOOM.THEMES =
     {
       caves = { none=60, few=40, some=12, heaps=2 }
       outdoors = { none=10, few=35, some=90, heaps=30 }
+      big_outdoor_rooms = { none=15, few=40, some=70, heaps=20 }
       pictures = { few=20, some=80, heaps=30 }
       hallways = { none=30, few=80, some=15, heaps=10 }
       windows = { few=25, some=50, heaps=90 }
       cages = { none=30, few=50, some=20, heaps=10 }
       liquids = { none=45, few=30, some=20, heaps=5 }
       doors = { few=20, some=70, heaps=30 }
+      beams  = { none=10, few=60, some=40, heaps=10 }
       steepness = { few=25, some=50, heaps=90 }
       big_rooms = { none=25, few=40, some=25, heaps=15 }
       ambushes = { none=5, few=20, some=75, heaps=30 }
       teleporters = { none=20, few=30, some=65, heaps=10 }
       keys = { none=15, few=50, some=50, heaps=20 }
+      trikeys = { none=10, few=40, some=80, heaps=20 }
       symmetry = { none=40, few=30, some=35, heaps=25 }
       switches = { none=20, few=60, some=40, heaps=10 }
       secrets = { few=5, some=80, heaps=25 }
+      scenics  = { none=5,  few=25, some=40, heaps=80}
       traps   = { none=10, few=40, some=70, heaps=25 }
       barrels = { none=10, few=50, some=20, heaps=5 }
+      fences  = { none=5, few=20, some=80, heaps=15 }
+      porches = { none=5, few=15, some=80, heaps=50 }
     }
 
     ceil_light_prob = 65
 
-    scenic_fence =
+    scenic_fences =
     {
       MIDBARS3 = 8
       MIDSPACE = 8
       MIDBARS1 = 8
       BRNSMALC = 2
+    }
+
+    sink_style =
+    {
+      sharp = 1
+      curved = 1
     }
 
     skyboxes =
@@ -1915,6 +2002,8 @@ DOOM.THEMES =
       beam_textured = 50
     }
 
+    wall_group_prob = 65
+
     wall_groups =
     {
       torches2 = 30 --red
@@ -1951,11 +2040,29 @@ DOOM.THEMES =
       gtd_wall_hell_ossuary = 40
       gtd_wall_high_gap_set = 20
       gtd_wall_high_gap_alt_set = 20
-      gtd_generic_half_floor = 30
+      gtd_generic_half_floor = 20
+      gtd_generic_half_floor_no_trim = 20
+      gtd_generic_half_floor_inverted_braced = 20
       gtd_woodframe = 15
       gtd_woodframe_green = 15
       gtd_round_inset = 30
       gtd_generic_ceilwall = 30
+      gtd_generic_glow_wall = 40
+      gtd_generic_artsy_bedazzled = 40
+      gtd_generic_alt_colors = 40
+      gtd_generic_mid_band = 10
+      gtd_generic_double_banded_ceil = 40
+      gtd_wall_hell_vaults_ftex = 40
+      gtd_generic_frame_light_band = 40
+      gtd_generic_frame_metal = 40
+      gtd_generic_artsy_center_braced_hell = 40
+      gtd_generic_d64_1x = 6
+      gtd_generic_d64_1x_yellow = 6
+      gtd_generic_d64_1x_blue = 6
+      gtd_generic_d64_2x = 6
+      gtd_generic_d64_2x_yellow = 6
+      gtd_generic_d64_2x_blue = 6
+      gtd_generic_tek_grate = 40
     }
 
     outdoor_wall_groups =
@@ -1988,6 +2095,8 @@ DOOM.THEMES =
       hell_o_marb_icon_bfalls = 1
       hell_o_egyptish = 1
       hell_o_blood_ocatgon = 1
+      hell_o_catamet = 1
+      hell_o_crematorium_windows = 1
     }
 
     window_groups =
@@ -2024,9 +2133,13 @@ DOOM.THEMES =
 
     fence_posts =
     {
-      Post_metal = 50
-      Post_gothic_1 = 50
-      Post_gothic_2 = 50
+      Post_metal = 25
+      Post_gothic_blue = 10
+      Post_gothic_green = 10
+      Post_gothic_red = 15
+      Post_gothic_blue_2 = 10
+      Post_gothic_green_2 = 10
+      Post_gothic_red_2 = 15
     }
 
     cave_torches =
@@ -2099,18 +2212,24 @@ DOOM.THEMES =
       steepness = { few=25, some=70, heaps=40 }
       pictures = { few=50, some=50, heaps=70 }
       big_rooms = { none=25, few=60, some=15, heaps=10 }
+      big_outdoor_rooms = { none=25, few=25, some=80, heaps=10 }
       ambushes = { none=10, few=15, some=55, heaps=35 }
       hallways = { none=20, few=60, some=15, heaps=5 }
       teleporters = { none=15, few=25, some=60, heaps=10 }
       keys = { none=15, few=40, some=60, heaps=25 }
+      trikeys = { none=10, few=50, some=80, heaps=25 }
       liquids = { none=20, few=45, some=25, heaps=15 }
       traps = { few=20, some=70, heaps=40 }
       switches = { none=25, few=60, some=35, heaps=10 }
       cages    = { none=15, few=25, some=65, heaps=10 }
       symmetry = { none=55, few=25, some=40, heaps=20 }
       secrets = { few=65, some=40, heaps=10 }
+      scenics = { none=5,  few=30, some=60, heaps=80}
       caves = { none=60, few=35, some=8, heaps=3 }
       barrels = { none=45, few=15, some=5, heaps=4 }
+      porches = { none=0, few=25, some=40, heaps=80 }
+      fences  = { none=5, few=15, some=80, heaps=25 }
+      beams  = { none=15, few=60, some=30, heaps=10 }
     }
 
     monster_prefs =
@@ -2130,11 +2249,17 @@ DOOM.THEMES =
       Mastermind = 1.5
     }
 
-    scenic_fence =
+    scenic_fences =
     {
       MIDBRN1 = 3
       MIDGRATE = 10
       MIDBARS3 = 8
+    }
+
+    sink_style =
+    {
+      sharp = 0.1
+      curved = 1
     }
 
     skyboxes =
@@ -2182,6 +2307,29 @@ DOOM.ROOM_THEMES =
       FLAT19 = 20
       FLAT23 = 20
       FLAT5_4 = 15
+    }
+  }
+
+
+  any_access_Hallway =
+  {
+    env   = "hallway"
+    group = "access"
+    prob  = 1
+
+    walls =
+    {
+      GRAY1 = 50
+    }
+
+    floors =
+    {
+      FLAT1 = 30
+    }
+
+    ceilings =
+    {
+      FLAT1 = 30
     }
   }
 
@@ -3824,6 +3972,16 @@ DOOM.ROOM_THEMES =
     {
       CEMENT7 = 50
       CEMENT9 = 50
+      GRAY1 = 20
+      GRAY4 = 20
+      GRAY5 = 20
+      GRAY7 = 20
+      GRAYBIG = 20
+      GRAYTALL = 20
+      STONE2 = 15
+      STARG1 = 15
+      STARTAN3 = 15
+      MARBLE1 = 10
     }
 
     floors =

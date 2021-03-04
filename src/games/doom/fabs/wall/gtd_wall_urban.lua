@@ -80,6 +80,22 @@ PREFABS.Wall_modern_piping =
 
   x_fit = "frame"
   z_fit = "top"
+
+  tex_METAL5 =
+  {
+    METAL5 = 1
+    METAL3 = 1
+    METAL4 = 1
+    TEKLITE = 1
+    LITE3 = 0.5
+    LITE5 = 0.5
+    LITEBLU1 = 0.5
+    LITEBLU4 = 1
+    TEKGREN4 = 1
+    TEKWALL1 = 0.5
+    TEKWALL4 = 0.5
+    TEKWALL6 = 0.5
+  }
 }
 
 -- shutters
@@ -126,7 +142,7 @@ PREFABS.Wall_modern_shutter_EPIC =
   prob   = 20
   theme = "urban"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
   replaces = "Wall_modern_shutter"
 
   on_liquids = "never"
@@ -263,6 +279,8 @@ PREFABS.Wall_wide_dark_windows_with_door =
 
   z_fit = "top"
 
+  need_solid_back = true
+
   tex_MODWALL4 = "MODWALL4"
   tex_MODWALL3 =
   {
@@ -285,7 +303,7 @@ PREFABS.Wall_holo_marquee =
 
   engine = "zdoom"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   prob = 10
 

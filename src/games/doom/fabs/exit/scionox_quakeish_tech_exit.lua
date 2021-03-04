@@ -11,12 +11,17 @@ PREFABS.Exit_scionox_quakeish_tech_exit =
 
   where  = "seeds"
 
-  uses_epic_textures = true
+  texture_pack = "armaetus"
 
   seed_w = 2
   seed_h = 2
 
   deep   = 16
+
+  start_fab_peer = {
+    "Start_scionox_quakeish_tech_start"
+    "Start_scionox_quakeish_tech_start_2"
+  }
 
   x_fit  = "frame"
   y_fit  = "top"
